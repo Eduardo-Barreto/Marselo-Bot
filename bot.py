@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix=">", case_insensitive=True)
 @bot.event
 async def on_ready():
 	print(f'amigo esto aqui, loguei com {bot.user}')
-	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="o edu reclamar O DIA TODO"))
+	await bot.change_presence(activity=discord.Game(name="pedra na Loritta 👀"))
 
 @bot.event
 async def on_message(message):
@@ -29,7 +29,6 @@ async def on_message(message):
 
 	if str(canal).startswith('Direct Message'):
 		print('--'*len(comando) + f'{message.author.name} enviou uma DM, se liga:\n"{comando}"\n'+'--'*len(comando))
-		return
 
 	if comando == 'teste' and message.author.id == usuarios.edu:
 		print(message.channel)
@@ -125,6 +124,22 @@ async def on_message(message):
 	
 	if (comando == '>clear') and (message.author.id == usuarios.edu):
 		os.system('clear')
+		await message.delete()
+		return
+
+	if (comando.startswith('>status')) and (message.author.id == usuarios.edu):
+		status = message.content.replace('>status ', '')
+		if status.startswith('jogando'):
+			name = message.content.replace('jogando ', '').replace('>status ', '')
+			await bot.change_presence(activity=discord.Game(name=name))
+		if status.startswith('ouvindo'):
+			name = message.content.replace('ouvindo ', '').replace('>status ', '')
+			await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=name))
+		if status.startswith('assistindo'):
+			name = message.content.replace('assistindo ', '').replace('>status ', '')
+			await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=name))
+		os.system('clear')
+		print(comando)
 		await message.delete()
 		return
 
