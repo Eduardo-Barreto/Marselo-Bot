@@ -16,6 +16,7 @@ bot = commands.Bot(command_prefix=">", case_insensitive=True)
 @bot.event
 async def on_ready():
 	print(f'amigo esto aqui, loguei com {bot.user}')
+	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="o edu reclamar O DIA TODO"))
 
 @bot.event
 async def on_message(message):
