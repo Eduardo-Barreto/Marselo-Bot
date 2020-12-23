@@ -48,7 +48,7 @@ async def on_message(message):
 
 	if (comando[0:2] in ['-p', '-n', '-q', '-m', '!p']) or (comando[0:3] in ['-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go']):
 		if message.channel.id != 714004747509694527:
-			print(f'mensagem "{comando}" de {message.user.name} apagada :)')
+			print(f'mensagem "{comando}" de {message.author.name} apagada :)')
 			await message.delete()
 		return
 
