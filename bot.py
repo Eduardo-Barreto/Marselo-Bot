@@ -22,14 +22,16 @@ async def on_ready():
 async def on_message(message):
 
 	canal = message.channel
+	comando = utils.normalizar(message.content)
 
 	if message.author == bot.user:
 		return
 
-	comando = utils.normalizar(message.content)
+	if str(canal).startswith('Direct Message'):
+		print('--'*len(comando) + f'{message.author.name} enviou uma DM, se liga:\n"{comando}"\n'+'--'*len(comando))
 
 	if comando == 'teste' and message.author.id == usuarios.edu:
-		print(dir(message.author.roles))
+		print(message.channel)
 		return
 
 	if comando == '>ping':
@@ -49,8 +51,11 @@ async def on_message(message):
 
 	if (comando[0:2] in ['-p', '-n', '-q', '-m', '!p']) or (comando[0:3] in ['-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go']):
 		if message.channel.id != 714004747509694527:
-			print(f'mensagem "{comando}" de {message.author.name} apagada :)')
-			await message.delete()
+			try:
+				await message.delete()
+				print(f'mensagem "{comando}" de {message.author.name} apagada :)')
+			except:
+				await canal.send('não posso apagar uma mensagem sua na DM grr')
 		return
 
 	if (('te banir' in comando) or ('banir vc' in comando)) and (message.author.id == usuarios.iris):
@@ -114,6 +119,9 @@ async def on_message(message):
 
 	if ('passar pano' in comando) or ('passando pano' in comando) or ('passo pano' in comando):
 		await canal.send(file=discord.File('images/panos.png'))
+	
+	if (comando == '>clear') and (message.author.id == usuarios.edu):
+		os.system('clear')
 
 	# if comando.startswith('>avast'):
 	# 	await message.delete()
