@@ -40,14 +40,24 @@ def dicionario(palavra):
         for txt in text:
             pesquisa.append(remove_html_tags(str(txt)))
 
-        embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
-        embed.set_footer(text="fonte: dicio.com.br")
-        embed.add_field(name=pesquisa[0].title(), value='--'*len(pesquisa[0]), inline=False)
-        cont = 0
-        for i in range(1, len(pesquisa)):
-            if pesquisa[i] and pesquisa[i] != " ":
-                cont+=1
-                embed.add_field(name=f'Significado {cont}: ', value=pesquisa[i], inline=False)
+        if pesquisa[0].startswith('Ainda não temos'):
+            url = "https://youtu.be/dQw4w9WgXcQ"
+            embed = discord.Embed(title=f'Não consegui encontrar "{palavra}" no dicio :(\n', url=url, colour=discord.Colour(0x3498DB))
+            search = palavra.replace('-', '+')
+            url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
+            shorted = pyshorteners.Shortener()
+            url = shorted.tinyurl.short(url)
+            embed.add_field(name=f'Mas aqui está uma pesquisa que deve te ajudar:', value=url, inline=False)
+            embed.set_footer(text="desculpa")
+        else:
+            embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
+            embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
+            embed.add_field(name=pesquisa[0].title(), value='--'*len(pesquisa[0]), inline=False)
+            cont = 0
+            for i in range(1, len(pesquisa)):
+                if pesquisa[i] and pesquisa[i] != " ":
+                    cont+=1
+                    embed.add_field(name=f'Significado {cont}: ', value=pesquisa[i], inline=False)
         return embed
     except:
         try:
@@ -67,14 +77,24 @@ def dicionario(palavra):
             for txt in text:
                 pesquisa.append(remove_html_tags(str(txt)))
 
-            embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
-            embed.set_footer(text="fonte: dicio.com.br")
-            embed.add_field(name=pesquisa[0].title(), value='--'*len(pesquisa[0]), inline=False)
-            cont = 0
-            for i in range(1, len(pesquisa)):
-                if pesquisa[i] and pesquisa[i] != " ":
-                    cont+=1
-                    embed.add_field(name=f'Significado {cont}: ', value=pesquisa[i], inline=False)
+            if pesquisa[0].startswith('Ainda não temos'):
+                url = "https://youtu.be/dQw4w9WgXcQ"
+                embed = discord.Embed(title=f'Não consegui encontrar "{palavra}" no dicio :(\n', url=url, colour=discord.Colour(0x3498DB))
+                search = palavra.replace('-', '+')
+                url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
+                shorted = pyshorteners.Shortener()
+                url = shorted.tinyurl.short(url)
+                embed.add_field(name=f'Mas aqui está uma pesquisa que deve te ajudar:', value=url, inline=False)
+                embed.set_footer(text="desculpa")
+            else:
+                embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
+                embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
+                embed.add_field(name=pesquisa[0].title(), value='--'*len(pesquisa[0]), inline=False)
+                cont = 0
+                for i in range(1, len(pesquisa)):
+                    if pesquisa[i] and pesquisa[i] != " ":
+                        cont+=1
+                        embed.add_field(name=f'Significado {cont}: ', value=pesquisa[i], inline=False)
             return embed
 
         except:
