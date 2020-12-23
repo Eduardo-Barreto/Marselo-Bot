@@ -93,12 +93,12 @@ async def on_message(message):
 	if 'marselo' in comando:
 		if (('te amo' in comando) or ('amo vc' in comando) or ('amo voce' in comando)) and (('te odeio' not in comando) and ('odeio vc' not in comando) and ('odeio voce' not in comando)):
 			await canal.send('https://i.pinimg.com/236x/a1/67/08/a167080bf7444b2ce355e5ae17089ee4.jpg')
-		elif ('te amo' in comando) and ('te odeio' in comando):
-			await canal.send('https://pbs.twimg.com/media/EapT8RoWoAAD9M2.jpg')
 		elif (('te odeio' in comando) or ('odeio vc' in comando) or ('odeio voce' in comando)) and (('te amo' not in comando) and ('amo vc' not in comando) and ('amo voce' not in comando)):
 			frase = recalque.frases[randint(0, len(recalque.frases)-1)]
 			await canal.send(f'ah é, <@{message.author.id}>?!\n{frase} <:kissing_heart:790794753780088902>')
 			return
+		elif (('te amo' in comando) or ('amo vc' in comando) or ('amo voce' in comando)) and (('te odeio' in comando) or ('odeio vc' in comando) or ('odeio voce' in comando)):
+			await canal.send('https://pbs.twimg.com/media/EapT8RoWoAAD9M2.jpg')
 		else:
 			texto = message.content.replace('marselo', message.author.nick).replace('MARSELO', message.author.nick.upper())
 			await canal.send(texto)
