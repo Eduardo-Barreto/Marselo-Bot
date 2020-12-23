@@ -29,6 +29,7 @@ async def on_message(message):
 
 	if str(canal).startswith('Direct Message'):
 		print('--'*len(comando) + f'{message.author.name} enviou uma DM, se liga:\n"{comando}"\n'+'--'*len(comando))
+		return
 
 	if comando == 'teste' and message.author.id == usuarios.edu:
 		print(message.channel)
@@ -74,6 +75,7 @@ async def on_message(message):
 
 	if ('tu e gay' in comando) or ('tu eh gay' in comando):
 		await canal.send('https://i.pinimg.com/736x/ae/29/9c/ae299cf0dae2be30a564fcc00dd4a2a4.jpg')
+		return
 
 	if (comando == '>anti_raid') and (message.author.id in usuarios.mods):
 		await canal.send('ok')
@@ -85,6 +87,7 @@ async def on_message(message):
 				quit()
 			if message.author.id not in usuarios.mods:
 				await message.delete()
+		return
 
 	if comando.startswith('>dic') or comando.startswith('>dc') or comando.startswith('>dicionario'):
 		await canal.send('Opa, é pra já! Saindo no capricho')
@@ -114,14 +117,16 @@ async def on_message(message):
 			await canal.send(texto)
 			await canal.send('...')
 			await canal.send('https://cdn.dicionariopopular.com/imagens/homem-aranha-apontando-og.jpg')
-
 		return
 
 	if ('passar pano' in comando) or ('passando pano' in comando) or ('passo pano' in comando):
 		await canal.send(file=discord.File('images/panos.png'))
+		return
 	
 	if (comando == '>clear') and (message.author.id == usuarios.edu):
 		os.system('clear')
+		await message.delete()
+		return
 
 	# if comando.startswith('>avast'):
 	# 	await message.delete()
