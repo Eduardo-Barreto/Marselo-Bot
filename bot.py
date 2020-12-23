@@ -46,12 +46,12 @@ async def on_message(message):
 		last_ping = ping
 		return
 
-	if comando[0:2] in ['-p', '-n', '-q', '-m', '!p']:
+	if (comando[0:2] in ['-p', '-n', '-q', '-m', '!p']) or (comando[0:3] in ['-rm', '-rf', '-rr', '-rw', '-ff', 'ar!']):
 		if message.channel.id != 714004747509694527:
 			await message.delete()
 		return
 
-	if (('te banir' in comando) or ('banir vc' in comando))and (message.author.id == usuarios.iris):
+	if (('te banir' in comando) or ('banir vc' in comando)) and (message.author.id == usuarios.iris):
 		await canal.send('ta bom iris.')
 		return
 
@@ -100,7 +100,10 @@ async def on_message(message):
 		elif (('te amo' in comando) or ('amo vc' in comando) or ('amo voce' in comando)) and (('te odeio' in comando) or ('odeio vc' in comando) or ('odeio voce' in comando)):
 			await canal.send('https://pbs.twimg.com/media/EapT8RoWoAAD9M2.jpg')
 		else:
-			texto = message.content.replace('marselo', message.author.nick).replace('MARSELO', message.author.nick.upper())
+			try:
+				texto = message.content.replace('marselo', message.author.nick).replace('MARSELO', message.author.nick.upper())
+			except:
+				texto = message.content.replace('marselo', message.author.name).replace('MARSELO', message.author.name.upper())
 			await canal.send(texto)
 			await canal.send('...')
 			await canal.send('https://cdn.dicionariopopular.com/imagens/homem-aranha-apontando-og.jpg')
