@@ -127,7 +127,7 @@ async def on_message(message):
 			await canal.send(f'ops <@{message.author.id}>, você não pode usar esse comando :(')
 
 	if (comando.startswith('>atualizar')) and (message.author.id == usuarios.edu):
-		os.system('cd ..')
+		os.chdir('..')
 		os.system('sudo rm -R Marselo-Bot')
 		os.system('git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git')
 		os.system('cp /home/pi/Desktop/my_token.py /home/pi/Desktop/Marselo-Bot')
