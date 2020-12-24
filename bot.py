@@ -27,7 +27,7 @@ client = commands.Bot(command_prefix = ">",case_insensitive=False, intents=inten
 async def on_ready():
 	os.system('cls' if os.name=='nt' else 'clear')
 	print(f'amigo esto aqui, loguei com {client.user}')
-	await client.change_presence(activity=discord.Game(name="pedra na Loritta 👀"))
+	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='github.com/Eduardo-Barreto/Marselo-Bot/'))
 
 @client.event
 async def on_member_join(member):
@@ -77,7 +77,6 @@ async def on_message_delete(message):
 		for channel in member.guild.channels:
 			if channel.name == 'log-deleted':
 				await channel.send(f'`{mensagem}` de <@{user}> apagada no canal <#{canal}>')
-
 
 @client.event
 async def on_message(message):
