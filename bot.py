@@ -100,7 +100,7 @@ async def on_message(message):
 					await message.delete()
 			return
 		else:
-			await message.send(f'EI <@{message.author.id}>, você não pode usar esse comando! Ele é muito sério e só para <@709927397910249564>.')
+			await canal.send(f'EI <@{message.author.id}>, você não pode usar esse comando! Ele é muito sério e só para <@709927397910249564>.')
 
 	if comando.startswith('>dic') or comando.startswith('>dc') or comando.startswith('>dicionario'):
 		await canal.send('Opa, é pra já! Saindo no capricho')
@@ -148,12 +148,13 @@ async def on_message(message):
 			elif quantidade < 0:
 				quantidade = 1
 
-			print(f'{message.author.name} pediu >clear {quantidade} em {message.channel}')
+			print(f'{message.author.name} pediu >clear {quantidade-1} em {message.channel}')
 			await canal.purge(limit=quantidade, check=lambda msg: not msg.pinned)
 		else:
 			await canal.send(f'ops <@{message.author.id}>, você não pode usar esse comando :(')
 
 	if (comando.startswith('>atualizar')) and (message.author.id == usuarios.edu):
+		message.delete()
 		os.chdir('..')
 		os.system('sudo rm -R Marselo-Bot')
 		os.system('git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git')

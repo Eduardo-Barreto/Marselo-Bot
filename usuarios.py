@@ -7,4 +7,4 @@ samuel = 790748815966994453
 everton = 790317317821038632
 arco_iris =785959252501856339
 
-mods = [xorx, iris, samuel, everton, arco_iris]
+mods = [edu, xorx, iris, samuel, arco_iris]
