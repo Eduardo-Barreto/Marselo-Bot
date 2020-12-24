@@ -126,8 +126,4 @@ async def on_message(message):
 		else:
 			await canal.send(f'ops <@{message.author.id}>, você não pode usar esse comando :(')
 
-	if comando == '>nitro':
-		await message.delete()
-		await canal.send('https://cdn.discordapp.com/attachments/691240822619766834/722972792219369543/Nitro_free_trial-1-1-1.png')
-
 client.run(my_token.discord)
