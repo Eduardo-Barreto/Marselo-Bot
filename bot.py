@@ -10,6 +10,7 @@ import utils
 
 last_ping = 1000
 anti_raid = False
+cargos_pronomes = 791808051983155200
 
 anti_log = ['>cls', '>atualizar', '>status', '-p', '-n', '-q', '-m', '-r', '!p', '-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go']
 
@@ -19,7 +20,8 @@ def check_anti_log(message):
 			return False
 	return True
 
-client = discord.Client()
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix = ">",case_insensitive=False, intents=intents)
 
 @client.event
 async def on_ready():
@@ -27,6 +29,42 @@ async def on_ready():
 	print(f'amigo esto aqui, loguei com {client.user}')
 	await client.change_presence(activity=discord.Game(name="pedra na Loritta 👀"))
 
+@client.event
+async def on_member_join(member):
+	canal = member.guild.system_channel
+	await canal.send(f'Bem vindo {member.mention}! Se apresenta pra gente, e não esquece de reagir na mensagem dos pronomes (clicando no link) pra receber o cargo com os seus :)\nhttps://discord.com/channels/705843882725998714/726953826057322496/791808051983155200')
+
+@client.event
+async def on_raw_reaction_add(payload):
+
+	if payload.message_id != cargos_pronomes:
+		return
+
+	if payload.emoji.name == '💙':
+		role = discord.utils.get(payload.member.guild.roles, name='a/ela/-a')
+	elif payload.emoji.name == '💛':
+		role = discord.utils.get(payload.member.guild.roles, name='o/ele/-o')
+	elif payload.emoji.name == '🧡':
+		role = discord.utils.get(payload.member.guild.roles, name='ê/elu/-e')
+
+	await payload.member.add_roles(role)
+
+@client.event
+async def on_raw_reaction_remove(payload):
+	guild = discord.utils.find(lambda g : g.id == payload.guild_id, client.guilds)
+	member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
+
+	if payload.message_id != cargos_pronomes:
+		return
+
+	if payload.emoji.name == '💙':
+		role = discord.utils.get(guild.roles, name='a/ela/-a')
+	elif payload.emoji.name == '💛':
+		role = discord.utils.get(guild.roles, name='o/ele/-o')
+	elif payload.emoji.name == '🧡':
+		role = discord.utils.get(guild.roles, name='ê/elu/-e')
+
+	await member.remove_roles(role)
 
 @client.event
 async def on_message_delete(message):
