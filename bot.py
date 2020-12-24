@@ -131,7 +131,7 @@ async def on_message(message):
 		os.system('sudo rm -R Marselo-Bot')
 		os.system('git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git')
 		os.system('cp /home/pi/Desktop/my_token.py /home/pi/Desktop/Marselo-Bot')
-		os.system('cd Marselo-Bot')
+		os.chdir('Marselo-Bot')
 		os.system('clear')
 		os.system('python3 bot.py')
 		quit()
