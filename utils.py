@@ -99,6 +99,7 @@ def dicionario(palavra):
 
         except:
             url = "https://youtu.be/dQw4w9WgXcQ"
+            palavra = palavra.replace('-', ' ')
             embed = discord.Embed(title=f'Não consegui encontrar "{palavra}" no dicio :(\n', url=url, colour=discord.Colour(0x3498DB))
             search = palavra.replace('-', '+')
             url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
