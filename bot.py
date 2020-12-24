@@ -9,14 +9,37 @@ import usuarios
 import utils
 
 last_ping = 1000
+anti_raid = False
 
-client = commands.Bot(command_prefix=">", case_insensitive=True)
+anti_log = ['>cls', '>atualizar', '>status', '-p', '-n', '-q', '-m', '-r', '!p', '-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go']
+
+def check_anti_log(message):
+	for item in range(0, len(anti_log)):
+		if anti_log[item] in message.content:
+			return False
+	return True
+
+client = discord.Client()
 
 @client.event
 async def on_ready():
 	os.system('cls' if os.name=='nt' else 'clear')
 	print(f'amigo esto aqui, loguei com {client.user}')
 	await client.change_presence(activity=discord.Game(name="pedra na Loritta 👀"))
+
+
+@client.event
+async def on_message_delete(message):
+	global anti_raid
+	if (message.channel.name != 'log-deleted') and check_anti_log(message) and not anti_raid:
+		member = message.author
+		canal = message.channel.id
+		user = message.author.id
+		mensagem = message.content
+		for channel in member.guild.channels:
+			if channel.name == 'log-deleted':
+				await channel.send(f'`{mensagem}` de <@{user}> apagada no canal <#{canal}>')
+
 
 @client.event
 async def on_message(message):
@@ -59,15 +82,19 @@ async def on_message(message):
 		return
 
 	if comando == '>anti_raid':
+		global anti_raid
 		if message.author.id in usuarios.mods:
 			print('--'*len(comando) + f'ATENÇÃO: {message.author.name} pediu >anti_raid\n')
 			await canal.send('ok')
+			anti_raid = True
 			@client.event
 			async def on_message(message):
+				global anti_raid
 				if (message.content == '>anti_raid_stop') and (message.author.id in usuarios.mods):
 					await canal.send('ok, fim do anti raid mode')
 					print('--'*len(comando) + f'ATENÇÃO: {message.author.name} pediu o fim do anti_raid mode\n')
 					os.system('bot.py' if os.name=='nt' else 'python3 bot.py')
+					anti_raid = False
 					quit()
 				if message.author.id not in usuarios.mods:
 					await message.delete()
