@@ -58,7 +58,7 @@ async def on_message(message):
 				await canal.send('não posso apagar uma mensagem sua na DM grr')
 		return
 
-	if (comando == '>anti_raid'):
+	if comando == '>anti_raid':
 		if message.author.id in usuarios.mods:
 			print('--'*len(comando) + f'ATENÇÃO: {message.author.name} pediu >anti_raid\n')
 			await canal.send('ok')
@@ -86,7 +86,7 @@ async def on_message(message):
 		print('--'*len(comando) + f'{message.author.name} pediu >dicio\n')
 		await canal.send(embed=utils.dicionario(arg.lower()))
 		return
-	
+
 	if (comando == '>cls') and (message.author.id == usuarios.edu):
 		try:
 			await message.delete()
@@ -111,7 +111,7 @@ async def on_message(message):
 		await message.delete()
 		return
 
-	if (comando.startswith('>clear')):
+	if comando.startswith('>clear'):
 		if message.author.id in usuarios.mods:
 			quantidade = comando.replace('>clear ', '')
 			quantidade = int(quantidade)+1
@@ -125,5 +125,9 @@ async def on_message(message):
 			await canal.purge(limit=quantidade, check=lambda msg: not msg.pinned)
 		else:
 			await canal.send(f'ops <@{message.author.id}>, você não pode usar esse comando :(')
+
+	if comando == '>nitro':
+		await message.delete()
+		await canal.send('https://cdn.discordapp.com/attachments/691240822619766834/722972792219369543/Nitro_free_trial-1-1-1.png')
 
 client.run(my_token.discord)
