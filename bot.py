@@ -12,7 +12,7 @@ last_ping = 1000
 anti_raid = False
 cargos_pronomes = 791808051983155200
 
-anti_log = ['>cls', '>atualizar', '>status', '-p', '-n', '-q', '-m', '-r', '!p', '-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go']
+anti_log = ['>cls', '>atualizar', '>status', '-p', '-n', '-q', '-m', '-r', '!p', '-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go', 'discord.com/channels', 'discordapp.com/channels']
 
 def check_anti_log(message):
 	for item in range(0, len(anti_log)):
