@@ -176,7 +176,7 @@ async def on_message(message):
 		return
 
 	if comando.startswith('>clear'):
-		if message.author.id in usuarios.mods:
+		if (message.author.id in usuarios.mods) or (message.author.id == usuarios.helo):
 			quantidade = comando.replace('>clear ', '')
 			quantidade = int(quantidade)+1
 
