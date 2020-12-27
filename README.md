@@ -24,4 +24,15 @@ Um simples reminder :)
 
 **Uso:** `>lembrar {assunto} em {tempo} {unidade}`
 
-![GIF dicio](https://media.giphy.com/media/6wuDsOsN1Zcm2GHfxU/giphy.gif)
+**Limites:** `1 segundo` - `24 horas`
+
+![GIF lembrar](https://media.giphy.com/media/tGCRNO6qGjn6j8sKo7/giphy.gif)
+
+## Clear
+Apaga a quantidade de mensagens escolhida no canal atual (só para moderadores)
+
+**Uso:** `>clear {quantidade}`
+
+**Limites:** `0` - `1000`
+
+![Gif clear](https://media.giphy.com/media/I6rPZmjh3XbRl8KW9G/giphy.gif)
