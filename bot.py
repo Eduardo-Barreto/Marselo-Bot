@@ -3,6 +3,7 @@ from discord.ext import commands
 import time
 from random import randint
 import os
+import asyncio
 
 import my_token
 import usuarios
@@ -139,7 +140,7 @@ async def on_message(message):
 		else:
 			await canal.send(f'EI <@{message.author.id}>, você não pode usar esse comando! Ele é muito sério e só para <@709927397910249564>.')
 
-	if comando.startswith('>dic') or comando.startswith('>dc') or comando.startswith('>dicionario'):
+	if comando.startswith('>dict') or comando.startswith('>dc') or comando.startswith('>dicionario') or comando.startswith('>dicio'):
 		await canal.send('Opa, é pra já! Saindo no capricho')
 		arg = comando.replace('>dic ', '').replace('>dc ', '').replace('>dicionario ', '').replace('>dicio ', '').replace('>dic', '').replace('>dc', '').replace('>nario', '').replace('io', '')
 		if(arg == ''):
@@ -150,6 +151,36 @@ async def on_message(message):
 		print('--'*len(comando) + f'{message.author.name} pediu >dicio\n')
 		await canal.send(embed=utils.dicionario(arg.lower()))
 		return
+
+	if comando.startswith('>lembrar'):
+		membro = message.author.id
+		lembrar = comando.replace('>lembrar ', '')
+		try:
+			base = lembrar.split(' em ')
+		except:
+			await canal.send('Você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
+		sobre = base[0]
+		base_tempo = str(base[1]).split(' ')
+		try:
+			tempo = float(base_tempo[0])
+		except:
+			await canal.send('Você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
+			return
+		unidade = base_tempo[1]
+		if unidade.startswith('segundo'):
+			await asyncio.sleep(tempo)
+			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+		elif unidade.startswith('minuto'):
+			tempo = tempo*60
+			await asyncio.sleep(tempo)
+			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+		elif unidade.startswith('hora'):
+			tempo = tempo*3600
+			await asyncio.sleep(tempo)
+			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+
+	if comando.startswith('>help'):
+		await canal.send('https://github.com/Eduardo-Barreto/Marselo-Bot/blob/master/README.md')
 
 	if (comando == '>cls') and (message.author.id == usuarios.edu):
 		try:
