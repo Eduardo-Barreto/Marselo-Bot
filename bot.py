@@ -69,7 +69,7 @@ async def on_raw_reaction_remove(payload):
 @client.event
 async def on_message_delete(message):
 	global anti_raid
-	if (message.channel.name != 'log-deleted') and check_anti_log(message) and not anti_raid and message.author.id != 234395307759108106:
+	if (message.channel.name != 'log-deleted') and check_anti_log(message) and not anti_raid and message.author.id != 234395307759108106 and message.author.id != 235088799074484224:
 		member = message.author
 		canal = message.channel.id
 		user = message.author.id
