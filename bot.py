@@ -181,7 +181,7 @@ async def on_message(message):
 			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
 
 	if comando.startswith('>help'):
-		await canal.send('https://github.com/Eduardo-Barreto/Marselo-Bot/blob/master/README.md')
+		await canal.send('Nesse link você pode encontrar ajuda para usar... Eu!\nhttps://github.com/Eduardo-Barreto/Marselo-Bot/blob/master/README.md')
 
 	if (comando == '>cls') and (message.author.id == usuarios.edu):
 		try:
