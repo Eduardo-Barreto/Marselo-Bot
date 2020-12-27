@@ -25,7 +25,7 @@ def dicionario(palavra):
         return embed
 
     try:
-        url = f'https://www.dicio.com.br/{palavra}'
+        url = f'https://www.dicio.com.br/{palavra}/'
         response = urlopen(url)
         html = response.read()
         soup = BeautifulSoup(html, 'html.parser')
@@ -62,7 +62,7 @@ def dicionario(palavra):
     except:
         try:
             palavra = palavra.replace(' ', '-')
-            url = f'https://www.dicio.com.br/{palavra}'
+            url = f'https://www.dicio.com.br/{palavra}/'
             response = urlopen(url)
             html = response.read()
             soup = BeautifulSoup(html, 'html.parser')
