@@ -47,7 +47,7 @@ def dicionario(palavra):
             url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
             shorted = pyshorteners.Shortener()
             url = shorted.tinyurl.short(url)
-            embed.add_field(name=f'Mas aqui está uma pesquisa que deve te ajudar:', value=url, inline=False)
+            embed.add_field(name=f'Mas pesquisei isso no google e esse foi o resultado:', value=url, inline=False)
             embed.set_footer(text="desculpa")
         else:
             embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
@@ -84,7 +84,7 @@ def dicionario(palavra):
                 url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
                 shorted = pyshorteners.Shortener()
                 url = shorted.tinyurl.short(url)
-                embed.add_field(name=f'Mas aqui está uma pesquisa que deve te ajudar:', value=url, inline=False)
+                embed.add_field(name=f'Mas pesquisei isso no google e esse foi o resultado:', value=url, inline=False)
                 embed.set_footer(text="desculpa")
             else:
                 embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
@@ -105,6 +105,6 @@ def dicionario(palavra):
             url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
             shorted = pyshorteners.Shortener()
             url = shorted.tinyurl.short(url)
-            embed.add_field(name=f'Mas aqui está uma pesquisa que deve te ajudar:', value=url, inline=False)
+            embed.add_field(name=f'Mas pesquisei isso no google e esse foi o resultado:', value=url, inline=False)
             embed.set_footer(text="desculpa")
             return embed

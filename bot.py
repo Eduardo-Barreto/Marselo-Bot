@@ -155,16 +155,17 @@ async def on_message(message):
 	if comando.startswith('>lembrar'):
 		membro = message.author.id
 		lembrar = comando.replace('>lembrar ', '')
+		await canal.send(f'Ok <@{membro}>, vou te lembrar sobre {lembrar}!')
 		try:
 			base = lembrar.split(' em ')
 		except:
-			await canal.send('Você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
+			await canal.send('Oops, você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
 		sobre = base[0]
 		base_tempo = str(base[1]).split(' ')
 		try:
 			tempo = float(base_tempo[0])
 		except:
-			await canal.send('Você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
+			await canal.send('Oops, você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
 			return
 		unidade = base_tempo[1]
 		if unidade.startswith('segundo'):
