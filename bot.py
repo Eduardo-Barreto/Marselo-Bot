@@ -86,6 +86,8 @@ async def on_command_error(ctx, error):
             f'Perai {ctx.author.mention},' +
             ' você não tem permissão para executar esse comando 🤨'
         )
+    if isinstance(error, TimeoutError):
+        utils.clear()
 
 
 @bot.event
