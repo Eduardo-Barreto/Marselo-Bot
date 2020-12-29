@@ -1,5 +1,6 @@
 import discord
 from urllib.request import urlopen
+from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 import re
 from unicodedata import normalize
@@ -13,15 +14,17 @@ def normalizar(txt):
 
 
 def clear():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def dicionario(palavra):
 
     if palavra == 'marselo':
         url = "https://youtu.be/dQw4w9WgXcQ"
-        embed = discord.Embed(title=f'marselo\n', url=url, colour=discord.Colour(0x3498DB))
-        embed.add_field(name=f'marselo', value='marselo', inline=False)
+        embed = discord.Embed(
+            title='marselo\n', url=url, colour=discord.Colour(0x3498DB)
+        )
+        embed.add_field(name='marselo', value='marselo', inline=False)
         embed.set_footer(text="marselo")
         return embed
 
@@ -43,24 +46,45 @@ def dicionario(palavra):
 
         if pesquisa[0].startswith('Ainda não temos'):
             url = "https://youtu.be/dQw4w9WgXcQ"
-            embed = discord.Embed(title=f'Não consegui encontrar "{palavra}" no dicio :(\n', url=url, colour=discord.Colour(0x3498DB))
+            embed = discord.Embed(
+                title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
+                url=url,
+                colour=discord.Colour(0x3498DB)
+            )
             search = palavra.replace('-', '+')
-            url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
+            url = 'https://www.google.com/search?&q='
+            + search + '&ie=UTF-8&oe=UTF-8'
             shorted = pyshorteners.Shortener()
             url = shorted.tinyurl.short(url)
-            embed.add_field(name=f'Mas pesquisei isso no google e esse foi o resultado:', value=url, inline=False)
+            embed.add_field(
+                name='Mas pesquisei isso no google e encontrei isso:',
+                value=url,
+                inline=False
+            )
             embed.set_footer(text="desculpa")
         else:
-            embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
+            embed = discord.Embed(
+                title=f'{palavra.title()}\n',
+                url=url,
+                colour=discord.Colour(0x3498DB)
+            )
             embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
-            embed.add_field(name=pesquisa[0].title(), value='--'*len(pesquisa[0]), inline=False)
+            embed.add_field(
+                name=pesquisa[0].title(),
+                value='--'*len(pesquisa[0]),
+                inline=False
+            )
             cont = 0
             for i in range(1, len(pesquisa)):
                 if pesquisa[i] and pesquisa[i] != " ":
-                    cont+=1
-                    embed.add_field(name=f'Significado {cont}: ', value=pesquisa[i], inline=False)
+                    cont += 1
+                    embed.add_field(
+                        name=f'Significado {cont}: ',
+                        value=pesquisa[i],
+                        inline=False
+                    )
         return embed
-    except:
+    except HTTPError:
         try:
             palavra = palavra.replace(' ', '-')
             url = f'https://www.dicio.com.br/{palavra}/'
@@ -80,32 +104,64 @@ def dicionario(palavra):
 
             if pesquisa[0].startswith('Ainda não temos'):
                 url = "https://youtu.be/dQw4w9WgXcQ"
-                embed = discord.Embed(title=f'Não consegui encontrar "{palavra}" no dicio :(\n', url=url, colour=discord.Colour(0x3498DB))
+                embed = discord.Embed(
+                    title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
+                    url=url,
+                    colour=discord.Colour(0x3498DB)
+                )
                 search = palavra.replace('-', '+')
-                url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
+                url = 'https://www.google.com/search?&q='
+                + search + '&ie=UTF-8&oe=UTF-8'
                 shorted = pyshorteners.Shortener()
                 url = shorted.tinyurl.short(url)
-                embed.add_field(name=f'Mas pesquisei isso no google e esse foi o resultado:', value=url, inline=False)
+                embed.add_field(
+                    name='Mas pesquisei isso no google e encontrei isso:',
+                    value=url,
+                    inline=False
+                )
                 embed.set_footer(text="desculpa")
             else:
-                embed = discord.Embed(title=f'{palavra.title()}\n', url=url, colour=discord.Colour(0x3498DB))
-                embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
-                embed.add_field(name=pesquisa[0].title(), value='--'*len(pesquisa[0]), inline=False)
+                embed = discord.Embed(
+                    title=f'{palavra.title()}\n',
+                    url=url,
+                    colour=discord.Colour(0x3498DB)
+                )
+                embed.set_footer(
+                    text="Disponível em: https://www.dicio.com.br."
+                )
+                embed.add_field(
+                    name=pesquisa[0].title(),
+                    value='--'*len(pesquisa[0]),
+                    inline=False
+                )
                 cont = 0
                 for i in range(1, len(pesquisa)):
                     if pesquisa[i] and pesquisa[i] != " ":
-                        cont+=1
-                        embed.add_field(name=f'Significado {cont}: ', value=pesquisa[i], inline=False)
+                        cont += 1
+                        embed.add_field(
+                            name=f'Significado {cont}: ',
+                            value=pesquisa[i],
+                            inline=False
+                        )
             return embed
 
-        except:
+        except HTTPError:
             url = "https://youtu.be/dQw4w9WgXcQ"
             palavra = palavra.replace('-', ' ')
-            embed = discord.Embed(title=f'Não consegui encontrar "{palavra}" no dicio :(\n', url=url, colour=discord.Colour(0x3498DB))
+            embed = discord.Embed(
+                title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
+                url=url,
+                colour=discord.Colour(0x3498DB)
+            )
             search = palavra.replace('-', '+')
-            url = 'https://www.google.com/search?&q='+ search+'&ie=UTF-8&oe=UTF-8'
+            url = 'https://www.google.com/search?&q='
+            + search + '&ie=UTF-8&oe=UTF-8'
             shorted = pyshorteners.Shortener()
             url = shorted.tinyurl.short(url)
-            embed.add_field(name=f'Mas pesquisei isso no google e esse foi o resultado:', value=url, inline=False)
+            embed.add_field(
+                name='Mas pesquisei isso no google e encontrei isso:',
+                value=url,
+                inline=False
+            )
             embed.set_footer(text="desculpa")
             return embed
