@@ -4,18 +4,19 @@ from bs4 import BeautifulSoup
 import re
 from unicodedata import normalize
 import pyshorteners
+import os
+
 
 def normalizar(txt):
     texto = txt.lower()
     return normalize('NFKD', texto).encode('ASCII', 'ignore').decode('ASCII')
 
+
+def clear():
+    os.system('cls' if os.name=='nt' else 'clear')
+
+
 def dicionario(palavra):
-    if palavra == 'iris':
-        url = "https://youtu.be/dQw4w9WgXcQ"
-        embed = discord.Embed(title=f'nada mais nada menos que\n', url=url, colour=discord.Colour(0x3498DB))
-        embed.add_field(name=f'A PATROA', value='e ó o respeito...', inline=False)
-        embed.set_footer(text="cale-se e respeite.")
-        return embed
 
     if palavra == 'marselo':
         url = "https://youtu.be/dQw4w9WgXcQ"
