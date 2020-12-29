@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 import time
 import asyncio
+import os
 
 import tokens
 import utils
@@ -332,6 +333,19 @@ async def status(ctx, *, status):
         utils.clear()
         print(f'Status alterado para "{status}"')
         await ctx.message.delete()
+
+
+@bot.command()
+async def atualizar(ctx):
+    await ctx.message.delete()
+    os.chdir('..')
+    os.system('sudo rm -R Marselo-Bot')
+    os.system('git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git')
+    os.system('cp /home/pi/Desktop/tokens.py /home/pi/Desktop/Marselo-Bot')
+    os.chdir('Marselo-Bot')
+    os.system('clear')
+    os.system('python3 bot.py')
+    quit()
 
 
 @bot.command()
