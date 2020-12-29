@@ -149,6 +149,10 @@ async def on_message_delete(message):
 
 @bot.command(aliases=['ajuda'])
 async def help(ctx, *, argumento=''):
+    print(
+        f'{ctx.author.name} pediu >help' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
     if len(argumento) > 0:
         url = f'{links.readme}#{argumento}'
         await ctx.send(f'Ajuda para o comando {argumento}: {url}')
@@ -162,7 +166,7 @@ async def help(ctx, *, argumento=''):
 @bot.command(aliases=['dicionario', 'dc', 'dict'])
 async def dicio(ctx, palavra):
     print(
-        f'{ctx.author.name} pediu >ping' +
+        f'{ctx.author.name} pediu >dicio' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     await ctx.send('Opa, é pra já! Saindo no capricho')
@@ -233,7 +237,7 @@ async def reminder(ctx, *, lembrar):
         await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
 
 
-@bot.command(aliases=['limpar', 'apagar'])
+@bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
     print(
