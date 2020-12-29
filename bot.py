@@ -1,236 +1,338 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 import time
-from random import randint
-import os
 import asyncio
 
-import my_token
-import usuarios
+import tokens
 import utils
+import bot_links as links
 
-last_ping = 1000
-anti_raid = False
-cargos_pronomes = 791808051983155200
+last_ping = 200
+msg_cargos_pronomes = 791808051983155200
 
-anti_log = ['>cls', '>atualizar', '>status', '-p', '-n', '-q', '-m', '-r', '!p', '-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go', 'discord.com/channels', 'discordapp.com/channels']
 
-def check_anti_log(message):
-	for item in range(0, len(anti_log)):
-		if anti_log[item] in message.content:
-			return False
-	return True
+def check_anti_log(mensagem):
+    for comando in bot.commands:
+        if str(comando) in mensagem:
+            return False
+        for alias in comando.aliases:
+            if str(alias) in mensagem:
+                return False
+    return True
+
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix = ">",case_insensitive=False, intents=intents)
+bot = commands.Bot(
+    command_prefix='>', case_insensitive=True,
+    intents=intents, help_command=None
+)
 
-@client.event
+
+@bot.event
 async def on_ready():
-	os.system('cls' if os.name=='nt' else 'clear')
-	print(f'amigo esto aqui, loguei com {client.user}')
-	await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='github.com/Eduardo-Barreto/Marselo-Bot/'))
+    utils.clear()
+    print(f'estou online, loguei em {bot.user}')
+    await bot.change_presence(
+        activity=discord.Activity(
+            type=discord.ActivityType.watching,
+            name='github.com/Eduardo-Barreto/Marselo-Bot/'
+        )
+    )
 
-@client.event
+
+@bot.event
+async def on_guild_join(guild):
+    canal = guild.system_channel
+    await canal.send(
+        'Oi, eu sou o Marselo e fui criado para o servidor' +
+        ' First Community Brasil! Você pode encontrar' +
+        f' mais sobre mim em {links.repositorio}'
+    )
+    log_deleted = get(guild.text_channels, name='log-deleted')
+    if log_deleted is None:
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(
+                read_messages=False
+            )
+        }
+        await guild.create_text_channel('log-deleted', overwrites=overwrites)
+
+
+@bot.event
 async def on_member_join(member):
-	canal = member.guild.system_channel
-	await canal.send(f'Bem vindo {member.mention}! Se apresenta pra gente, e não esquece de reagir na mensagem dos pronomes (clicando no link) pra receber o cargo com os seus :)\nhttps://discord.com/channels/705843882725998714/726953826057322496/791808051983155200')
+    print(f'{member} entrou no servidor :)')
+    canal = member.guild.system_channel
+    await canal.send(
+        f'Bem vindo {member.mention}! Se apresenta pra gente,' +
+        ' e não esquece de reagir na mensagem dos pronomes' +
+        ' (basta subir um pouco ou ir nas mensagens fixadas)' +
+        ' pra receber o cargo com os seus :)'
+    )
 
-@client.event
+
+@bot.event
+async def on_member_remove(member):
+    print(f'{member} saiu do servidor :(')
+
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Por favor passe todos os argumentos requiridos.')
+        await ctx.send(f'Você pode verificar os comandos em {links.readme}')
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send(
+            f'Perai {ctx.author.mention},' +
+            ' você não tem permissão para executar esse comando 🤨'
+        )
+
+
+@bot.event
 async def on_raw_reaction_add(payload):
 
-	if payload.message_id != cargos_pronomes:
-		return
+    if payload.message_id != msg_cargos_pronomes:
+        return
 
-	if payload.emoji.name == '💙':
-		role = discord.utils.get(payload.member.guild.roles, name='a/ela/-a')
-	elif payload.emoji.name == '💛':
-		role = discord.utils.get(payload.member.guild.roles, name='o/ele/-o')
-	elif payload.emoji.name == '🧡':
-		role = discord.utils.get(payload.member.guild.roles, name='ê/elu/-e')
+    if payload.emoji.name == '💙':
+        role = discord.utils.get(payload.member.guild.roles, name='a/ela/-a')
+    elif payload.emoji.name == '💛':
+        role = discord.utils.get(payload.member.guild.roles, name='o/ele/-o')
+    elif payload.emoji.name == '🧡':
+        role = discord.utils.get(payload.member.guild.roles, name='ê/elu/-e')
 
-	await payload.member.add_roles(role)
+    await payload.member.add_roles(role)
 
-@client.event
+
+@bot.event
 async def on_raw_reaction_remove(payload):
-	guild = discord.utils.find(lambda g : g.id == payload.guild_id, client.guilds)
-	member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
+    guild = discord.utils.find(lambda g: g.id == payload.guild_id, bot.guilds)
+    member = discord.utils.find(
+        lambda m: m.id == payload.user_id,
+        guild.members
+    )
 
-	if payload.message_id != cargos_pronomes:
-		return
+    if payload.message_id != msg_cargos_pronomes:
+        return
 
-	if payload.emoji.name == '💙':
-		role = discord.utils.get(guild.roles, name='a/ela/-a')
-	elif payload.emoji.name == '💛':
-		role = discord.utils.get(guild.roles, name='o/ele/-o')
-	elif payload.emoji.name == '🧡':
-		role = discord.utils.get(guild.roles, name='ê/elu/-e')
+    if payload.emoji.name == '💙':
+        role = discord.utils.get(guild.roles, name='a/ela/-a')
+    elif payload.emoji.name == '💛':
+        role = discord.utils.get(guild.roles, name='o/ele/-o')
+    elif payload.emoji.name == '🧡':
+        role = discord.utils.get(guild.roles, name='ê/elu/-e')
 
-	await member.remove_roles(role)
+    await member.remove_roles(role)
 
-@client.event
+
+@bot.event
 async def on_message_delete(message):
-	global anti_raid
-	if (message.channel.name != 'log-deleted') and check_anti_log(message) and not anti_raid and message.author.id != 234395307759108106 and message.author.id != 235088799074484224:
-		member = message.author
-		canal = message.channel.id
-		user = message.author.id
-		mensagem = message.content
-		for channel in member.guild.channels:
-			if channel.name == 'log-deleted':
-				await channel.send(f'`{mensagem}` de <@{user}> apagada no canal <#{canal}>')
+    global anti_raid
+    if(
+        (message.channel.name != 'log-deleted')
+        and check_anti_log(message.content)
+        and message.author.id != 234395307759108106
+        and message.author.id != 235088799074484224
+    ):
+        member = message.author
+        canal = message.channel.id
+        user = message.author.id
+        mensagem = message.content
+        for channel in member.guild.channels:
+            if channel.name == 'log-deleted':
+                await channel.send(
+                    f'`{mensagem}` de <@{user}> apagada no canal <#{canal}>'
+                )
 
-@client.event
-async def on_message(message):
 
-	canal = message.channel
-	comando = utils.normalizar(message.content)
+@bot.command(aliases=['ajuda'])
+async def help(ctx, *, argumento=''):
+    if len(argumento) > 0:
+        url = f'{links.readme}#{argumento}'
+        await ctx.send(f'Ajuda para o comando {argumento}: {url}')
+    else:
+        await ctx.send(
+            'Você pode encontrar todos os comandos em:' +
+            f' {links.readme}'
+        )
 
-	if message.author == client.user:
-		return
 
-	if str(canal).startswith('Direct Message'):
-		print('--'*len(comando) + f'{message.author.name} enviou uma DM, se liga:\n"{comando}"\n'+'--'*len(comando))
+@bot.command(aliases=['dicionario', 'dc', 'dict'])
+async def dicio(ctx, palavra):
+    print(
+        f'{ctx.author.name} pediu >ping' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+    await ctx.send('Opa, é pra já! Saindo no capricho')
+    await ctx.send(embed=utils.dicionario(palavra.lower()))
 
-	if comando == 'teste' and message.author.id == usuarios.edu:
-		print(message.channel)
-		return
 
-	if comando == '>ping':
-		global last_ping
-		pong = await canal.send('pong?')
-		init_time = int(round(time.time() * 1000))
-		await pong.edit(content=f'Pong!')
-		ping = int(round(time.time() * 1000)) - init_time
-		if ping < last_ping:
-			await canal.send(f'demorei {ping}ms, mais rapido que da ultima vez :)')
-		elif ping > last_ping:
-			await canal.send(f'demorei {ping}ms, mais lento que da ultima vez :/')
-		else:
-			await canal.send(f'demorei {ping}ms, exatamente o mesmo que da ultima vez!')
-		last_ping = ping
-		return
+@bot.command()
+async def ping(ctx):
+    print(f'{ctx.author.name} pediu >ping' +
+          f' no server {ctx.guild}, no canal {ctx.channel}')
+    global last_ping
+    pong = await ctx.send('pong?')
+    init_time = int(round(time.time() * 1000))
+    await pong.edit(content='Pong!')
+    ping = int(round(time.time() * 1000)) - init_time
 
-	if (comando[0:2] in ['-p', '-n', '-q', '-m', '-r', '!p']) or (comando[0:3] in ['-rm', '-rf', '-rr', '-rw', '-ff', 'ar!', '-go']):
-		if message.channel.id != 714004747509694527:
-			try:
-				await message.delete()
-				print(f'mensagem "{comando}" de {message.author.name} apagada :)')
-			except:
-				await canal.send('não posso apagar uma mensagem sua na DM grr')
-		return
+    if ping < last_ping:
+        await ctx.send(f'demorei {ping}ms, mais rapido que da ultima vez :)')
+    elif ping > last_ping:
+        await ctx.send(f'demorei {ping}ms, mais lento que da ultima vez :/')
+    else:
+        await ctx.send(f'demorei {ping}ms, o mesmo que da ultima vez!')
+    last_ping = ping
+    return
 
-	if comando == '>anti_raid':
-		global anti_raid
-		if message.author.id in usuarios.mods:
-			print('--'*len(comando) + f'ATENÇÃO: {message.author.name} pediu >anti_raid\n')
-			await canal.send('ok')
-			anti_raid = True
-			@client.event
-			async def on_message(message):
-				global anti_raid
-				if (message.content == '>anti_raid_stop') and (message.author.id in usuarios.mods):
-					await canal.send('ok, fim do anti raid mode')
-					print('--'*len(comando) + f'ATENÇÃO: {message.author.name} pediu o fim do anti_raid mode\n')
-					os.system('bot.py' if os.name=='nt' else 'python3 bot.py')
-					anti_raid = False
-					quit()
-				if message.author.id not in usuarios.mods:
-					await message.delete()
-			return
-		else:
-			await canal.send(f'EI <@{message.author.id}>, você não pode usar esse comando! Ele é muito sério e só para <@709927397910249564>.')
 
-	if comando.startswith('>dict') or comando.startswith('>dc') or comando.startswith('>dicionario') or comando.startswith('>dicio'):
-		await canal.send('Opa, é pra já! Saindo no capricho')
-		arg = comando.replace('>dic ', '').replace('>dc ', '').replace('>dicionario ', '').replace('>dicio ', '').replace('>dic', '').replace('>dc', '').replace('>nario', '').replace('io', '')
-		if(arg == ''):
-			await canal.send('ah, pera lá né meu camarada, não é possível pesquisar sobre o nada... eu sinto muito')
-			await canal.send('sinto porra nenhuma bip bop fodasse')
-			await canal.send('https://i.ytimg.com/vi/kDs_P1ek5cE/hqdefault.jpg')
-			return
-		print('--'*len(comando) + f'{message.author.name} pediu >dicio\n')
-		await canal.send(embed=utils.dicionario(arg.lower()))
-		return
+@bot.command(aliases=['lembrar', 'lembre'])
+async def reminder(ctx, *, lembrar):
+    print(
+        f'{ctx.author.name} pediu >lembrar' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+    membro = ctx.author.id
 
-	if comando.startswith('>lembrar'):
-		membro = message.author.id
-		lembrar = comando.replace('>lembrar ', '')
-		await canal.send(f'Ok <@{membro}>, vou te lembrar sobre {lembrar}!')
-		try:
-			base = lembrar.split(' em ')
-		except:
-			await canal.send('Oops, você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
-		sobre = base[0]
-		base_tempo = str(base[1]).split(' ')
-		try:
-			tempo = float(base_tempo[0])
-		except:
-			await canal.send('Oops, você digitou algo inválido, lembre-se: a sintaxe do comando é `>lembrar {sobre} em {tempo} {unidade(segundos/minutos/horas)}`')
-			return
-		unidade = base_tempo[1]
-		if unidade.startswith('segundo'):
-			await asyncio.sleep(tempo)
-			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
-		elif unidade.startswith('minuto'):
-			tempo = tempo*60
-			await asyncio.sleep(tempo)
-			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
-		elif unidade.startswith('hora'):
-			tempo = tempo*3600
-			await asyncio.sleep(tempo)
-			await canal.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+    if 'em' in lembrar:
+        base = lembrar.split(' em ')
+    else:
+        await ctx.send(
+            'Oops, você digitou algo inválido, lembre-se:' +
+            'a sintaxe do comando é `>lembrar {sobre} em {tempo}' +
+            ' {unidade(segundos/minutos/horas)}`'
+        )
+        return
+    sobre = base[0]
+    base_tempo = str(base[1]).split(' ')
+    try:
+        tempo = float(base_tempo[0])
+    except ValueError:
+        await ctx.send(
+            'Oops, você digitou algo inválido, lembre-se:' +
+            'a sintaxe do comando é `>lembrar {sobre} em {tempo}' +
+            ' {unidade(segundos/minutos/horas)}`'
+        )
+        return
 
-	if comando.startswith('>help'):
-		await canal.send('Nesse link você pode encontrar ajuda para usar... Eu!\nhttps://github.com/Eduardo-Barreto/Marselo-Bot/blob/master/README.md')
+    unidade = base_tempo[1]
+    await ctx.send(f'Ok <@{membro}>, vou te lembrar sobre {lembrar}!')
+    if unidade.startswith('segundo'):
+        await asyncio.sleep(tempo)
+        await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+    elif unidade.startswith('minuto'):
+        tempo = tempo*60
+        await asyncio.sleep(tempo)
+        await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+    elif unidade.startswith('hora'):
+        tempo = tempo*3600
+        await asyncio.sleep(tempo)
+        await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
 
-	if (comando == '>cls') and (message.author.id == usuarios.edu):
-		try:
-			await message.delete()
-		except:
-			pass
-		os.system('cls' if os.name=='nt' else 'clear')
-		return
 
-	if (comando.startswith('>status')) and (message.author.id == usuarios.edu):
-		status = message.content.replace('>status ', '')
-		if status.startswith('jogando'):
-			name = message.content.replace('jogando ', '').replace('>status ', '')
-			await client.change_presence(activity=discord.Game(name=name))
-		if status.startswith('ouvindo'):
-			name = message.content.replace('ouvindo ', '').replace('>status ', '')
-			await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=name))
-		if status.startswith('assistindo'):
-			name = message.content.replace('assistindo ', '').replace('>status ', '')
-			await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=name))
-		os.system('clear')
-		print(comando)
-		await message.delete()
-		return
+@bot.command(aliases=['limpar', 'apagar'])
+@commands.has_permissions(manage_messages=True)
+async def clear(ctx, quantidade=1):
+    print(
+        f'{ctx.author.name} pediu >clear {quantidade+1}' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+    if quantidade > 1000:
+        quantidade = 1000
+    elif quantidade < 0:
+        quantidade = 1
+    await ctx.channel.purge(
+        limit=(quantidade+1),
+        check=lambda msg: not msg.pinned
+    )
 
-	if comando.startswith('>clear'):
-		if (message.author.id in usuarios.mods) or (message.author.id == usuarios.helo):
-			quantidade = comando.replace('>clear ', '')
-			quantidade = int(quantidade)+1
 
-			if quantidade > 1000:
-				quantidade = 1000
-			elif quantidade < 0:
-				quantidade = 1
+@bot.command(aliases=['expulsar'])
+@commands.has_permissions(kick_members=True)
+async def kick(ctx, membro: discord.Member, *, motivo=None):
+    await membro.kick(reason=motivo)
+    await ctx.send(f'{membro.mention} foi expulso do servidor.')
+    print(f'{ctx.author.name} expulsou {membro.name}')
 
-			print(f'{message.author.name} pediu >clear {quantidade-1} em {message.channel}')
-			await canal.purge(limit=quantidade, check=lambda msg: not msg.pinned)
-		else:
-			await canal.send(f'ops <@{message.author.id}>, você não pode usar esse comando :(')
 
-	if (comando.startswith('>atualizar')) and (message.author.id == usuarios.edu):
-		await message.delete()
-		os.chdir('..')
-		os.system('sudo rm -R Marselo-Bot')
-		os.system('git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git')
-		os.system('cp /home/pi/Desktop/my_token.py /home/pi/Desktop/Marselo-Bot')
-		os.chdir('Marselo-Bot')
-		os.system('clear')
-		os.system('python3 bot.py')
-		quit()
+@bot.command(aliases=['banir'])
+@commands.has_permissions(ban_members=True)
+async def ban(ctx, membro: discord.Member, *, motivo=None):
+    await membro.ban(reason=motivo)
+    await ctx.send(f'{membro.mention} foi banido do servidor.')
+    await ctx.send(links.banido)
+    print(f'{ctx.author.name} baniu {membro.name}')
 
-client.run(my_token.discord)
+
+@bot.command(aliases=['desbanir'])
+@commands.has_permissions(ban_members=True)
+async def unban(ctx, *, membro):
+    lista_banidos = await ctx.guild.bans()
+    nome, tag = membro.split('#')
+
+    for banido in lista_banidos:
+        usuario = banido.user
+        if (usuario.name, usuario.discriminator) == (nome, tag):
+            await ctx.guild.unban(usuario)
+            await ctx.send(f'{usuario.mention} desbanido')
+            await ctx.send(links.desbanido)
+            print(f'{ctx.author.name} desbaniu {usuario.name}')
+            return
+
+
+@bot.command()
+async def cls(ctx):
+    if ctx.author.id == tokens.eduardo_id:
+        utils.clear()
+        await ctx.message.delete()
+
+
+@bot.command()
+async def status(ctx, *, status):
+
+    if ctx.author.id == tokens.eduardo_id:
+
+        if status.startswith('padrao'):
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.watching,
+                    name='github.com/Eduardo-Barreto/Marselo-Bot/'
+                )
+            )
+
+        if status.startswith('jogando'):
+            name = status.replace('jogando ', '')
+            await bot.change_presence(activity=discord.Game(name=name))
+
+        if status.startswith('ouvindo'):
+            name = status.replace('ouvindo ', '')
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.listening,
+                    name=name
+                )
+            )
+
+        if status.startswith('assistindo'):
+            name = status.replace('assistindo ', '')
+            await bot.change_presence(
+                activity=discord.Activity(
+                    type=discord.ActivityType.watching,
+                    name=name
+                )
+            )
+
+        utils.clear()
+        print(f'Status alterado para "{status}"')
+        await ctx.message.delete()
+
+
+@bot.command()
+async def teste(ctx):
+    log_deleted = get(ctx.guild.text_channels, name='log-deleted')
+    if log_deleted is None:
+        print('canal nao encontrado')
+
+
+bot.run(tokens.discord)
