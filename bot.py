@@ -194,7 +194,7 @@ async def ping(ctx):
     else:
         await ctx.send(f'demorei {ping}ms, o mesmo que da ultima vez!')
     last_ping = ping
-    await ctx.send(f'Mas o segundo ping é de {round(bot.latency * 100)}ms')
+    await ctx.send(f'Mas o segundo ping é de {round(bot.latency * 1000)}ms')
     return
 
 
