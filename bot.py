@@ -82,13 +82,16 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Por favor passe todos os argumentos requiridos.')
         await ctx.send(f'Você pode verificar os comandos em {links.readme}')
+
     if isinstance(error, commands.MissingPermissions):
         await ctx.send(
             f'Perai {ctx.author.mention},' +
             ' você não tem permissão para executar esse comando 🤨'
         )
-    if isinstance(error, TimeoutError):
-        utils.clear()
+    if isinstance(error, discord.Forbidden):
+        await ctx.send(
+            'Oops, não tenho permissão para executar esse comando 😔'
+        )
 
 
 @bot.event
@@ -255,6 +258,25 @@ async def clear(ctx, quantidade=1):
     )
 
 
+@commands.has_permissions(kick_members=True)
+@bot.command(aliases=['mutar', 'silenciar'])
+async def mute(ctx, membro: discord.Member):
+    for role in membro.roles:
+        if role.name != '@everyone':
+            try:
+                await membro.remove_roles(role)
+            except discord.Forbidden:
+                await ctx.send(
+                    f'{membro.name} não pode ser silenciado por ter um' +
+                    ' cargo acima do meu, porém tirei todos que consegui hehe'
+                )
+                return
+
+    silenciado = discord.utils.get(ctx.guild.roles, name='silenciado')
+    await membro.add_roles(silenciado)
+    await ctx.send(f'<@{membro.id}> foi silenciado.')
+
+
 @bot.command(aliases=['expulsar'])
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, membro: discord.Member, *, motivo=None):
@@ -346,13 +368,6 @@ async def atualizar(ctx):
     os.system('clear')
     os.system('python3 bot.py')
     quit()
-
-
-@bot.command()
-async def teste(ctx):
-    log_deleted = get(ctx.guild.text_channels, name='log-deleted')
-    if log_deleted is None:
-        print('canal nao encontrado')
 
 
 bot.run(tokens.discord)
