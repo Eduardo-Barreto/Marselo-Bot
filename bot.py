@@ -268,7 +268,7 @@ async def mute(ctx, membro: discord.Member):
             except discord.Forbidden:
                 await ctx.send(
                     f'{membro.name} não pode ser silenciado por ter um' +
-                    ' cargo acima do meu, porém tirei todos que consegui hehe'
+                    ' cargo acima do meu.'
                 )
                 return
 
