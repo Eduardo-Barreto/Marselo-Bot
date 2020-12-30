@@ -239,6 +239,12 @@ async def reminder(ctx, *, lembrar):
         tempo = tempo*3600
         await asyncio.sleep(tempo)
         await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+    else:
+        await ctx.send(
+            'Oops, você digitou algo inválido, lembre-se:' +
+            'a sintaxe do comando é `>lembrar {sobre} em {tempo}' +
+            ' {unidade(segundos/minutos/horas)}`'
+        )
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
