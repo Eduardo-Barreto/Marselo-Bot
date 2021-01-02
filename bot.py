@@ -191,11 +191,24 @@ async def on_message(message):
         return
 
     if 'google pesquisar' in comando:
+        await message.channel.send(
+            'Pode deixar que eu pesquiso pra você!'
+        )
         url = pesquisa.get_link(comando.replace('google pesquisar', ''))
         pesquisa.get_screenshot(url)
+        embed = discord.Embed(
+            title='Clique aqui para ser redirecionado',
+            description='cada coisa q vcs pesquisam...',
+            colour=discord.Colour(0x349cff),
+            url=url,
+        )
+        embed.set_footer(text='desculpa a demora me barraram na entrada')
+        imagem = discord.File('screenshot.jpg', filename='screenshot.jpg')
+        embed.set_image(url='attachment://screenshot.jpg')
         await message.channel.send(
-            f'essa é a sua pesquisa: {url}',
-            file=discord.File('screenshot.jpg')
+            content=f'Aqui está a sua pesquisa, <@{message.author.id}>',
+            file=imagem,
+            embed=embed
         )
 
 
@@ -234,7 +247,7 @@ async def ping(ctx):
 
     pong = await ctx.send('pong?')
     init_time = int(round(time.time() * 1000))
-    await pong.edit(content='Medindo...')
+    await pong.edit(content='Calculando o ping...')
     ping_marselo = int(round(time.time() * 1000)) - init_time
 
     init_time = int(round(time.time() * 1000))
