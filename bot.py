@@ -28,7 +28,7 @@ def check_anti_log(mensagem):
             if str(alias) in mensagem:
                 return False
     for comando in comandos_errados:
-        if (str(comando) in mensagem):
+        if (str(comando) in utils.normalizar(mensagem)):
             return False
     return True
 
