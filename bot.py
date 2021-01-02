@@ -195,7 +195,7 @@ async def on_message(message):
         url = pesquisa.get_link(comando.replace('google pesquisar', ''))
         pesquisa.get_screenshot(url)
         await message.channel.send(
-            url,
+            f'essa é a sua pesquisa: {url}',
             file=discord.File('screenshot.jpg')
         )
 
