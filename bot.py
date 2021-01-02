@@ -1,4 +1,5 @@
 import discord
+from discord import DMChannel
 from discord.ext import commands
 from discord.utils import get
 import time
@@ -11,6 +12,7 @@ import bot_links as links
 
 last_ping = 200
 msg_cargos_pronomes = 791808051983155200
+tempo_inicial = 0
 
 
 def check_anti_log(mensagem):
@@ -32,14 +34,18 @@ bot = commands.Bot(
 
 @bot.event
 async def on_ready():
+    global tempo_inicial
+    tempo_inicial = utils.hora_atual()
     utils.clear()
-    print(f'estou online, loguei em {bot.user}')
     await bot.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.watching,
             name='github.com/Eduardo-Barreto/Marselo-Bot/'
         )
     )
+    edu = await bot.fetch_user(tokens.eduardo_id)
+    await DMChannel.send(edu, 'estou online!')
+    print(f'estou online, loguei em {bot.user}')
 
 
 @bot.event
@@ -154,7 +160,7 @@ async def on_message_delete(message):
 @bot.command(aliases=['ajuda'])
 async def help(ctx, *, argumento=''):
     print(
-        f'{ctx.author.name} pediu >help' +
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >help' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     if len(argumento) > 0:
@@ -170,7 +176,7 @@ async def help(ctx, *, argumento=''):
 @bot.command(aliases=['dicionario', 'dc', 'dict'])
 async def dicio(ctx, palavra):
     print(
-        f'{ctx.author.name} pediu >dicio' +
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >dicio' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     await ctx.send('Opa, é pra já! Saindo no capricho')
@@ -179,7 +185,7 @@ async def dicio(ctx, palavra):
 
 @bot.command()
 async def ping(ctx):
-    print(f'{ctx.author.name} pediu >ping' +
+    print(f'{utils.hora_atual()}: {ctx.author.name} pediu >ping' +
           f' no server {ctx.guild}, no canal {ctx.channel}')
     global last_ping
     pong = await ctx.send('pong?')
@@ -201,7 +207,7 @@ async def ping(ctx):
 @bot.command(aliases=['lembrar', 'lembre'])
 async def reminder(ctx, *, lembrar):
     print(
-        f'{ctx.author.name} pediu >lembrar' +
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >reminder' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     membro = ctx.author.id
@@ -248,11 +254,45 @@ async def reminder(ctx, *, lembrar):
         )
 
 
+@bot.command()
+async def uptime(ctx):
+    global tempo_inicial
+    print(
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >uptime' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+    tempo_atual = utils.hora_atual()
+    horas_atuais = int(tempo_atual[:2])
+    minutos_atuais = int(tempo_atual[3:5])
+    horas_iniciais = int(tempo_inicial[:2])
+    minutos_iniciais = int(tempo_inicial[3:5])
+    uptime_horas = horas_atuais - horas_iniciais
+    uptime_minutos = minutos_atuais - minutos_iniciais
+
+    if uptime_horas == 0:
+        uptime_horas = '00'
+    elif uptime_horas < 10:
+        uptime_horas = f'0{uptime_horas}'
+
+    if uptime_minutos == 0:
+        uptime_minutos = '00'
+
+    elif uptime_minutos < 10:
+        uptime_minutos = f'0{uptime_minutos}'
+
+    if (uptime_horas, uptime_minutos) == ('00', '00'):
+        await ctx.send('não faz nem um minuto que estou online!')
+        return
+
+    uptime = f'{uptime_horas}h{uptime_minutos}'
+    await ctx.send(f'estou online há {uptime}!')
+
+
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
     print(
-        f'{ctx.author.name} pediu >clear {quantidade+1}' +
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >clear {quantidade}' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     if quantidade > 1000:
@@ -282,6 +322,7 @@ async def mute(ctx, membro: discord.Member):
     silenciado = discord.utils.get(ctx.guild.roles, name='silenciado')
     await membro.add_roles(silenciado)
     await ctx.send(f'<@{membro.id}> foi silenciado.')
+    print(f'{utils.hora_atual()}: {ctx.author.name} mutou {membro.name}')
 
 
 @bot.command(aliases=['expulsar'])
@@ -289,7 +330,7 @@ async def mute(ctx, membro: discord.Member):
 async def kick(ctx, membro: discord.Member, *, motivo=None):
     await membro.kick(reason=motivo)
     await ctx.send(f'{membro.mention} foi expulso do servidor.')
-    print(f'{ctx.author.name} expulsou {membro.name}')
+    print(f'{utils.hora_atual()}: {ctx.author.name} expulsou {membro.name}')
 
 
 @bot.command(aliases=['banir'])
@@ -298,7 +339,7 @@ async def ban(ctx, membro: discord.Member, *, motivo=None):
     await membro.ban(reason=motivo)
     await ctx.send(f'{membro.mention} foi banido do servidor.')
     await ctx.send(links.banido)
-    print(f'{ctx.author.name} baniu {membro.name}')
+    print(f'{utils.hora_atual()}: {ctx.author.name} baniu {membro.name}')
 
 
 @bot.command(aliases=['desbanir'])
@@ -313,7 +354,10 @@ async def unban(ctx, *, membro):
             await ctx.guild.unban(usuario)
             await ctx.send(f'{usuario.mention} desbanido')
             await ctx.send(links.desbanido)
-            print(f'{ctx.author.name} desbaniu {usuario.name}')
+            print(
+                f'{utils.hora_atual()}: {ctx.author.name}' +
+                f' desbaniu {usuario.name}'
+            )
             return
 
 

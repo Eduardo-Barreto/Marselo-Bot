@@ -6,6 +6,7 @@ import re
 from unicodedata import normalize
 import pyshorteners
 import os
+from datetime import datetime
 
 
 def normalizar(txt):
@@ -165,3 +166,7 @@ def dicionario(palavra):
             )
             embed.set_footer(text="desculpa")
             return embed
+
+
+def hora_atual():
+    return (datetime.now()).strftime("%H:%M:%S")
