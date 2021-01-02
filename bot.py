@@ -8,6 +8,7 @@ import os
 
 import tokens
 import utils
+import pesquisa
 import bot_links as links
 
 last_ping = 200
@@ -189,6 +190,14 @@ async def on_message(message):
                     ' mas aparentemente não tenho essa permissão aqui.'
                 )
         return
+
+    if 'google pesquisar' in comando:
+        url = pesquisa.get_link(comando.replace('google pesquisar', ''))
+        pesquisa.get_screenshot(url)
+        await message.channel.send(
+            url,
+            file=discord.File('screenshot.jpg')
+        )
 
 
 @bot.command(aliases=['ajuda'])
