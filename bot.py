@@ -14,14 +14,22 @@ last_ping = 200
 msg_cargos_pronomes = 791808051983155200
 tempo_inicial = 0
 
+comandos_errados = [
+    '-p', '-n', '-q', '-m', '-r', '!p', '-rm',
+    '-rf', '-rr', '-rw', '-ff', 'ar!', '-go'
+]
+
 
 def check_anti_log(mensagem):
     for comando in bot.commands:
-        if str(comando) in mensagem:
+        if (str(comando) in mensagem):
             return False
         for alias in comando.aliases:
             if str(alias) in mensagem:
                 return False
+    for comando in comandos_errados:
+        if (str(comando) in mensagem):
+            return False
     return True
 
 
@@ -155,6 +163,32 @@ async def on_message_delete(message):
                 await channel.send(
                     f'`{mensagem}` de <@{user}> apagada no canal <#{canal}>'
                 )
+
+
+@bot.event
+async def on_message(message):
+    await bot.process_commands(message)
+    comando = message.content
+
+    if message.author == bot.user:
+        return
+
+    if ((comando[0:2] in comandos_errados)
+       or (comando[0:3] in comandos_errados)):
+
+        if not str(message.channel.name).startswith('comando'):
+            try:
+                await message.delete()
+            except discord.Forbidden:
+                await message.channel.send(
+                    'você enviou um comando para um outro bot,' +
+                    ' mas foi no canal errado...'
+                )
+                await message.channel.send(
+                    'normalmente eu só apago' +
+                    ' mas aparentemente não tenho essa permissão aqui.'
+                )
+        return
 
 
 @bot.command(aliases=['ajuda'])
