@@ -168,7 +168,7 @@ async def on_message_delete(message):
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
-    comando = message.content
+    comando = utils.normalizar(message.content)
 
     if message.author == bot.user:
         return
