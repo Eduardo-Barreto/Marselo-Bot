@@ -15,8 +15,9 @@ def get_link(search):
 
 def get_screenshot(url):
     config = imgkit.config(
-        wkhtmltoimage='C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
+        wkhtmltoimage='/usr/bin/wkhtmltoimage'
         # rasp '/usr/bin/wkhtmltoimage'
+        # win 'C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
     )
 
     options = {
