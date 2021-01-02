@@ -23,7 +23,7 @@ def dicionario(palavra):
     if palavra == 'marselo':
         url = "https://youtu.be/dQw4w9WgXcQ"
         embed = discord.Embed(
-            title='marselo\n', url=url, colour=discord.Colour(0x3498DB)
+            title='marselo\n', url=url, colour=discord.Colour(0x349cff)
         )
         embed.add_field(name='marselo', value='marselo', inline=False)
         embed.set_footer(text="marselo")
@@ -50,7 +50,7 @@ def dicionario(palavra):
             embed = discord.Embed(
                 title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
                 url=url,
-                colour=discord.Colour(0x3498DB)
+                colour=discord.Colour(0x349cff)
             )
             search = palavra.replace('-', '+')
             url = 'https://www.google.com/search?&q='
@@ -67,7 +67,7 @@ def dicionario(palavra):
             embed = discord.Embed(
                 title=f'{palavra.title()}\n',
                 url=url,
-                colour=discord.Colour(0x3498DB)
+                colour=discord.Colour(0x349cff)
             )
             embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
             embed.add_field(
@@ -108,7 +108,7 @@ def dicionario(palavra):
                 embed = discord.Embed(
                     title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
                     url=url,
-                    colour=discord.Colour(0x3498DB)
+                    colour=discord.Colour(0x349cff)
                 )
                 search = palavra.replace('-', '+')
                 url = 'https://www.google.com/search?&q='
@@ -125,7 +125,7 @@ def dicionario(palavra):
                 embed = discord.Embed(
                     title=f'{palavra.title()}\n',
                     url=url,
-                    colour=discord.Colour(0x3498DB)
+                    colour=discord.Colour(0x349cff)
                 )
                 embed.set_footer(
                     text="Disponível em: https://www.dicio.com.br."
@@ -152,7 +152,7 @@ def dicionario(palavra):
             embed = discord.Embed(
                 title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
                 url=url,
-                colour=discord.Colour(0x3498DB)
+                colour=discord.Colour(0x349cff)
             )
             search = palavra.replace('-', '+')
             url = 'https://www.google.com/search?&q='

@@ -11,7 +11,6 @@ import utils
 import pesquisa
 import bot_links as links
 
-last_ping = 200
 msg_cargos_pronomes = 791808051983155200
 tempo_inicial = 0
 
@@ -228,23 +227,49 @@ async def dicio(ctx, palavra):
 
 @bot.command()
 async def ping(ctx):
-    print(f'{utils.hora_atual()}: {ctx.author.name} pediu >ping' +
-          f' no server {ctx.guild}, no canal {ctx.channel}')
-    global last_ping
+    print(
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >ping' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+
     pong = await ctx.send('pong?')
     init_time = int(round(time.time() * 1000))
-    await pong.edit(content='Pong!')
-    ping = int(round(time.time() * 1000)) - init_time
+    await pong.edit(content='Medindo...')
+    ping_marselo = int(round(time.time() * 1000)) - init_time
 
-    if ping < last_ping:
-        await ctx.send(f'demorei {ping}ms, mais rapido que da ultima vez :)')
-    elif ping > last_ping:
-        await ctx.send(f'demorei {ping}ms, mais lento que da ultima vez :/')
-    else:
-        await ctx.send(f'demorei {ping}ms, o mesmo que da ultima vez!')
-    last_ping = ping
-    await ctx.send(f'Mas o segundo ping é de {round(bot.latency * 1000)}ms')
-    return
+    init_time = int(round(time.time() * 1000))
+    ping_dicio = utils.dicionario('livro')
+    ping_dicio = int(round(time.time() * 1000)) - init_time
+
+    init_time = int(round(time.time() * 1000))
+    url = pesquisa.get_link('livro')
+    pesquisa.get_screenshot(url)
+    ping_google = int(round(time.time() * 1000)) - init_time
+
+    embed = discord.Embed(
+        title='Ping do marselo e suas dependências',
+        colour=discord.Colour(0x349cff),
+        url=links.rickrolling,
+        description='Valores listados em milissegundos' +
+                    ' e provavelmente imprecisos'
+    )
+    embed.set_footer(text='nossa mas esse do google é demorado né...')
+    embed.add_field(
+        name='Ping Marselo:',
+        value=f'{ping_marselo}ms',
+        inline=False
+    )
+    embed.add_field(
+        name='Ping Dicio:',
+        value=f'{ping_dicio}ms',
+        inline=False
+    )
+    embed.add_field(
+        name='Ping Google:',
+        value=f'{ping_google}ms',
+        inline=False
+    )
+    await pong.edit(content='Pong!', embed=embed)
 
 
 @bot.command(aliases=['lembrar', 'lembre'])
