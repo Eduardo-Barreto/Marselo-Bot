@@ -5,6 +5,9 @@ from discord.utils import get
 import time
 import asyncio
 import os
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import re
 
 import tokens
 import utils
@@ -250,13 +253,51 @@ async def ping(ctx):
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
 
+    def pingar_dicio(palavra):
+        url = f'https://www.dicio.com.br/{palavra}/'
+        response = urlopen(url)
+        html = response.read()
+        soup = BeautifulSoup(html, 'html.parser')
+        text = soup.find('p')
+
+        def remove_html_tags(text):
+            clean = re.compile('<.*?>')
+            return re.sub(clean, '', text)
+
+        pesquisa = []
+
+        for txt in text:
+            pesquisa.append(remove_html_tags(str(txt)))
+
+        embed = discord.Embed(
+            title=f'{palavra.title()}\n',
+            url=url,
+            colour=discord.Colour(0x349cff)
+        )
+        embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
+        embed.add_field(
+            name=pesquisa[0].title(),
+            value='--'*len(pesquisa[0]),
+            inline=False
+        )
+        cont = 0
+        for i in range(1, len(pesquisa)):
+            if pesquisa[i] and pesquisa[i] != " ":
+                cont += 1
+                embed.add_field(
+                    name=f'Significado {cont}: ',
+                    value=pesquisa[i],
+                    inline=False
+                )
+        return
+
     pong = await ctx.send('pong?')
     init_time = int(round(time.time() * 1000))
     await pong.edit(content='Calculando o ping...')
     ping_marselo = int(round(time.time() * 1000)) - init_time
 
     init_time = int(round(time.time() * 1000))
-    ping_dicio = utils.dicionario('livro')
+    pingar_dicio('livro')
     ping_dicio = int(round(time.time() * 1000)) - init_time
 
     init_time = int(round(time.time() * 1000))
