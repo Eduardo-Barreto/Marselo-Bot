@@ -169,6 +169,7 @@ async def on_message_delete(message):
 async def on_message(message):
     await bot.process_commands(message)
     comando = utils.normalizar(message.content)
+    ctx = message.channel
 
     if message.author == bot.user:
         return
@@ -176,22 +177,26 @@ async def on_message(message):
     if ((comando[0:2] in comandos_errados)
        or (comando[0:3] in comandos_errados)):
 
-        if not str(message.channel.name).startswith('comando'):
+        if not str(ctx.name).startswith('comando'):
             try:
                 await message.delete()
             except discord.Forbidden:
-                await message.channel.send(
+                await ctx.send(
                     'você enviou um comando para um outro bot,' +
                     ' mas foi no canal errado...'
                 )
-                await message.channel.send(
+                await ctx.send(
                     'normalmente eu só apago' +
                     ' mas aparentemente não tenho essa permissão aqui.'
                 )
         return
 
     if 'google pesquisar' in comando:
-        await message.channel.send(
+        print(
+            f'{utils.hora_atual()}: {ctx.author.name} pediu pesquisa' +
+            f' no server {ctx.guild}, no canal {ctx.channel}'
+        )
+        await ctx.send(
             'Pode deixar que eu pesquiso pra você!'
         )
         url = pesquisa.get_link(comando.replace('google pesquisar', ''))
@@ -205,7 +210,7 @@ async def on_message(message):
         embed.set_footer(text='desculpa a demora me barraram na entrada')
         imagem = discord.File('screenshot.jpg', filename='screenshot.jpg')
         embed.set_image(url='attachment://screenshot.jpg')
-        await message.channel.send(
+        await ctx.send(
             content=f'Aqui está a sua pesquisa, <@{message.author.id}>',
             file=imagem,
             embed=embed
