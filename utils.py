@@ -53,8 +53,11 @@ def dicionario(palavra):
                 colour=discord.Colour(0x349cff)
             )
             search = palavra.replace('-', '+')
-            url = 'https://www.google.com/search?&q='
-            + search + '&ie=UTF-8&oe=UTF-8'
+            url = (
+                'https://www.google.com/search?&q=' +
+                search +
+                '&ie=UTF-8&oe=UTF-8'
+            )
             shorted = pyshorteners.Shortener()
             url = shorted.tinyurl.short(url)
             embed.add_field(
@@ -86,6 +89,7 @@ def dicionario(palavra):
                     )
         return embed
     except HTTPError:
+        print('http error no dicio, tentando com traços')
         try:
             palavra = palavra.replace(' ', '-')
             url = f'https://www.dicio.com.br/{palavra}/'
@@ -111,8 +115,11 @@ def dicionario(palavra):
                     colour=discord.Colour(0x349cff)
                 )
                 search = palavra.replace('-', '+')
-                url = 'https://www.google.com/search?&q='
-                + search + '&ie=UTF-8&oe=UTF-8'
+                url = (
+                    'https://www.google.com/search?&q=' +
+                    search +
+                    '&ie=UTF-8&oe=UTF-8'
+                )
                 shorted = pyshorteners.Shortener()
                 url = shorted.tinyurl.short(url)
                 embed.add_field(
@@ -147,16 +154,20 @@ def dicionario(palavra):
             return embed
 
         except HTTPError:
+            print('http error total no dicio')
             url = "https://youtu.be/dQw4w9WgXcQ"
             palavra = palavra.replace('-', ' ')
             embed = discord.Embed(
-                title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
+                title=f'Não consegui encontrar "{palavra}" no dicio :(',
                 url=url,
                 colour=discord.Colour(0x349cff)
             )
             search = palavra.replace('-', '+')
-            url = 'https://www.google.com/search?&q='
-            + search + '&ie=UTF-8&oe=UTF-8'
+            url = (
+                'https://www.google.com/search?&q=' +
+                search +
+                '&ie=UTF-8&oe=UTF-8'
+            )
             shorted = pyshorteners.Shortener()
             url = shorted.tinyurl.short(url)
             embed.add_field(
