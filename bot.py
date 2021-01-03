@@ -8,7 +8,7 @@ import os
 
 import tokens
 import utils
-import pesquisa
+import pesquisa_google
 import bot_links as links
 
 msg_cargos_pronomes = 791808051983155200
@@ -199,8 +199,8 @@ async def on_message(message):
         await ctx.send(
             'Pode deixar que eu pesquiso pra você!'
         )
-        url = pesquisa.get_link(comando.replace('google pesquisar', ''))
-        pesquisa.get_screenshot(url)
+        url = pesquisa_google.get_link(comando.replace('google pesquisar', ''))
+        pesquisa_google.get_screenshot(url)
         embed = discord.Embed(
             title='Clique aqui para ser redirecionado',
             description='cada coisa q vcs pesquisam...',
@@ -240,7 +240,7 @@ async def dicio(ctx, palavra):
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     await ctx.send('Opa, é pra já! Saindo no capricho')
-    await ctx.send(embed=utils.dicionario(palavra.lower()))
+    await utils.dicionario(ctx, palavra.lower())
 
 
 @bot.command()
@@ -260,8 +260,8 @@ async def ping(ctx):
     ping_dicio = int(round(time.time() * 1000)) - init_time
 
     init_time = int(round(time.time() * 1000))
-    url = pesquisa.get_link('livro')
-    pesquisa.get_screenshot(url)
+    url = pesquisa_google.get_link('livro')
+    pesquisa_google.get_screenshot(url)
     ping_google = int(round(time.time() * 1000)) - init_time
 
     embed = discord.Embed(

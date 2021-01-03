@@ -4,9 +4,10 @@ from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 import re
 from unicodedata import normalize
-import pyshorteners
 import os
 from datetime import datetime
+
+import pesquisa_google
 
 
 def normalizar(txt):
@@ -18,7 +19,7 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def dicionario(palavra):
+async def dicionario(ctx, palavra):
 
     if palavra == 'marselo':
         url = "https://youtu.be/dQw4w9WgXcQ"
@@ -27,7 +28,8 @@ def dicionario(palavra):
         )
         embed.add_field(name='marselo', value='marselo', inline=False)
         embed.set_footer(text="marselo")
-        return embed
+        await ctx.send(embed=embed)
+        return
 
     try:
         url = f'https://www.dicio.com.br/{palavra}/'
@@ -46,26 +48,26 @@ def dicionario(palavra):
             pesquisa.append(remove_html_tags(str(txt)))
 
         if pesquisa[0].startswith('Ainda não temos'):
-            url = "https://youtu.be/dQw4w9WgXcQ"
+            print('Ainda não tem a palavra no dicio')
+            url = pesquisa_google.get_link(palavra)
+            pesquisa_google.get_screenshot(url)
             embed = discord.Embed(
-                title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
+                title=f'Não consegui encontrar "{palavra}" no dicio :(',
+                description='Mas pesquisei no google e encontrei isso:',
+                colour=discord.Colour(0x349cff),
                 url=url,
-                colour=discord.Colour(0x349cff)
             )
-            search = palavra.replace('-', '+')
-            url = (
-                'https://www.google.com/search?&q=' +
-                search +
-                '&ie=UTF-8&oe=UTF-8'
+            embed.set_footer(
+                text='Você pode clicar no texto em azul para abrir'
             )
-            shorted = pyshorteners.Shortener()
-            url = shorted.tinyurl.short(url)
-            embed.add_field(
-                name='Mas pesquisei isso no google e encontrei isso:',
-                value=url,
-                inline=False
+            imagem = discord.File(
+                'screenshot.jpg',
+                filename='screenshot.jpg'
             )
-            embed.set_footer(text="desculpa")
+            embed.set_image(url='attachment://screenshot.jpg')
+            palavra = palavra.replace('-', ' ')
+            await ctx.send(file=imagem, embed=embed)
+            return
         else:
             embed = discord.Embed(
                 title=f'{palavra.title()}\n',
@@ -87,7 +89,8 @@ def dicionario(palavra):
                         value=pesquisa[i],
                         inline=False
                     )
-        return embed
+        await ctx.send(embed=embed)
+        return
     except HTTPError:
         print('http error no dicio, tentando com traços')
         try:
@@ -108,26 +111,25 @@ def dicionario(palavra):
                 pesquisa.append(remove_html_tags(str(txt)))
 
             if pesquisa[0].startswith('Ainda não temos'):
-                url = "https://youtu.be/dQw4w9WgXcQ"
+                print('Ainda não tem a palavra no dicio')
+                url = pesquisa_google.get_link(palavra)
+                pesquisa_google.get_screenshot(url)
                 embed = discord.Embed(
-                    title=f'Não consegui encontrar "{palavra}" no dicio :(\n',
+                    title=f'Não consegui encontrar "{palavra}" no dicio :(',
+                    description='Mas pesquisei no google e encontrei isso:',
+                    colour=discord.Colour(0x349cff),
                     url=url,
-                    colour=discord.Colour(0x349cff)
                 )
-                search = palavra.replace('-', '+')
-                url = (
-                    'https://www.google.com/search?&q=' +
-                    search +
-                    '&ie=UTF-8&oe=UTF-8'
+                embed.set_footer(
+                    text='Você pode clicar no texto em azul para abrir'
                 )
-                shorted = pyshorteners.Shortener()
-                url = shorted.tinyurl.short(url)
-                embed.add_field(
-                    name='Mas pesquisei isso no google e encontrei isso:',
-                    value=url,
-                    inline=False
+                imagem = discord.File(
+                    'screenshot.jpg',
+                    filename='screenshot.jpg'
                 )
-                embed.set_footer(text="desculpa")
+                embed.set_image(url='attachment://screenshot.jpg')
+                palavra = palavra.replace('-', ' ')
+                await ctx.send(file=imagem, embed=embed)
             else:
                 embed = discord.Embed(
                     title=f'{palavra.title()}\n',
@@ -151,32 +153,29 @@ def dicionario(palavra):
                             value=pesquisa[i],
                             inline=False
                         )
-            return embed
+            await ctx.send(embed=embed)
+            return
 
         except HTTPError:
             print('http error total no dicio')
-            url = "https://youtu.be/dQw4w9WgXcQ"
-            palavra = palavra.replace('-', ' ')
+            url = pesquisa_google.get_link(palavra)
+            pesquisa_google.get_screenshot(url)
             embed = discord.Embed(
                 title=f'Não consegui encontrar "{palavra}" no dicio :(',
+                description='Mas pesquisei no google e encontrei isso:',
+                colour=discord.Colour(0x349cff),
                 url=url,
-                colour=discord.Colour(0x349cff)
             )
-            search = palavra.replace('-', '+')
-            url = (
-                'https://www.google.com/search?&q=' +
-                search +
-                '&ie=UTF-8&oe=UTF-8'
+            embed.set_footer(
+                text='Você pode clicar no texto em azul para abrir'
             )
-            shorted = pyshorteners.Shortener()
-            url = shorted.tinyurl.short(url)
-            embed.add_field(
-                name='Mas pesquisei isso no google e encontrei isso:',
-                value=url,
-                inline=False
+            imagem = discord.File(
+                'screenshot.jpg',
+                filename='screenshot.jpg'
             )
-            embed.set_footer(text="desculpa")
-            return embed
+            embed.set_image(url='attachment://screenshot.jpg')
+            palavra = palavra.replace('-', ' ')
+            await ctx.send(file=imagem, embed=embed)
 
 
 def hora_atual():
