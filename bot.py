@@ -194,8 +194,8 @@ async def on_message(message):
 
     if 'google pesquisar' in comando:
         print(
-            f'{utils.hora_atual()}: {ctx.author.name} pediu pesquisa' +
-            f' no server {ctx.guild}, no canal {ctx.channel}'
+            f'{utils.hora_atual()}: {message.author.name} pediu pesquisa' +
+            f' no server {message.guild}, no canal {message.channel}'
         )
         await ctx.send(
             'Pode deixar que eu pesquiso pra você!'
