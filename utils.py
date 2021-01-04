@@ -117,23 +117,3 @@ async def wikipedia(ctx, topico):
         embed.set_image(url='attachment://screenshot.jpg')
         topico = topico.replace('-', ' ')
         await ctx.send(file=imagem, embed=embed)
-
-    except:
-        url = pesquisa_google.get_link(topico)
-        pesquisa_google.get_screenshot(url)
-        embed = discord.Embed(
-            title=f'Não consegui encontrar "{topico}" na wiki :(',
-            description='Mas pesquisei no google e encontrei isso:',
-            colour=discord.Colour(0x349cff),
-            url=url,
-        )
-        embed.set_footer(
-            text='Você pode clicar no texto em azul para abrir'
-        )
-        imagem = discord.File(
-            'screenshot.jpg',
-            filename='screenshot.jpg'
-        )
-        embed.set_image(url='attachment://screenshot.jpg')
-        topico = topico.replace('-', ' ')
-        await ctx.send(file=imagem, embed=embed)
