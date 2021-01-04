@@ -1,11 +1,10 @@
 import discord
 from urllib.request import urlopen
 from urllib.error import HTTPError
-from bs4 import BeautifulSoup
-import re
 from unicodedata import normalize
 import os
 from datetime import datetime
+import wikipedia as wiki
 
 import pesquisa_google
 
@@ -19,7 +18,13 @@ def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+def hora_atual():
+    return (datetime.now()).strftime("%H:%M:%S")
+
+
 async def dicionario(ctx, palavra):
+
+    palavra = normalizar(palavra)
 
     if palavra == 'marselo':
         url = "https://youtu.be/dQw4w9WgXcQ"
@@ -32,128 +37,18 @@ async def dicionario(ctx, palavra):
         return
 
     try:
-        url = f'https://www.dicio.com.br/{palavra}/'
+        url = f'https://s.dicio.com.br/{palavra}.jpg'
         response = urlopen(url)
-        html = response.read()
-        soup = BeautifulSoup(html, 'html.parser')
-        text = soup.find('p')
-
-        def remove_html_tags(text):
-            clean = re.compile('<.*?>')
-            return re.sub(clean, '', text)
-
-        pesquisa = []
-
-        for txt in text:
-            pesquisa.append(remove_html_tags(str(txt)))
-
-        if pesquisa[0].startswith('Ainda não temos'):
-            print('Ainda não tem a palavra no dicio')
-            url = pesquisa_google.get_link(palavra)
-            pesquisa_google.get_screenshot(url)
-            embed = discord.Embed(
-                title=f'Não consegui encontrar "{palavra}" no dicio :(',
-                description='Mas pesquisei no google e encontrei isso:',
-                colour=discord.Colour(0x349cff),
-                url=url,
-            )
-            embed.set_footer(
-                text='Você pode clicar no texto em azul para abrir'
-            )
-            imagem = discord.File(
-                'screenshot.jpg',
-                filename='screenshot.jpg'
-            )
-            embed.set_image(url='attachment://screenshot.jpg')
-            palavra = palavra.replace('-', ' ')
-            await ctx.send(file=imagem, embed=embed)
-            return
-        else:
-            embed = discord.Embed(
-                title=f'{palavra.title()}\n',
-                url=url,
-                colour=discord.Colour(0x349cff)
-            )
-            embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
-            embed.add_field(
-                name=pesquisa[0].title(),
-                value='--'*len(pesquisa[0]),
-                inline=False
-            )
-            cont = 0
-            for i in range(1, len(pesquisa)):
-                if pesquisa[i] and pesquisa[i] != " ":
-                    cont += 1
-                    embed.add_field(
-                        name=f'Significado {cont}: ',
-                        value=pesquisa[i],
-                        inline=False
-                    )
-        await ctx.send(embed=embed)
+        await ctx.send(url)
         return
+
     except HTTPError:
         print('http error no dicio, tentando com traços')
         try:
             palavra = palavra.replace(' ', '-')
-            url = f'https://www.dicio.com.br/{palavra}/'
+            url = f'https://s.dicio.com.br/{palavra}.jpg'
             response = urlopen(url)
-            html = response.read()
-            soup = BeautifulSoup(html, 'html.parser')
-            text = soup.find('p')
-
-            def remove_html_tags(text):
-                clean = re.compile('<.*?>')
-                return re.sub(clean, '', text)
-
-            pesquisa = []
-
-            for txt in text:
-                pesquisa.append(remove_html_tags(str(txt)))
-
-            if pesquisa[0].startswith('Ainda não temos'):
-                print('Ainda não tem a palavra no dicio')
-                url = pesquisa_google.get_link(palavra)
-                pesquisa_google.get_screenshot(url)
-                embed = discord.Embed(
-                    title=f'Não consegui encontrar "{palavra}" no dicio :(',
-                    description='Mas pesquisei no google e encontrei isso:',
-                    colour=discord.Colour(0x349cff),
-                    url=url,
-                )
-                embed.set_footer(
-                    text='Você pode clicar no texto em azul para abrir'
-                )
-                imagem = discord.File(
-                    'screenshot.jpg',
-                    filename='screenshot.jpg'
-                )
-                embed.set_image(url='attachment://screenshot.jpg')
-                palavra = palavra.replace('-', ' ')
-                await ctx.send(file=imagem, embed=embed)
-            else:
-                embed = discord.Embed(
-                    title=f'{palavra.title()}\n',
-                    url=url,
-                    colour=discord.Colour(0x349cff)
-                )
-                embed.set_footer(
-                    text="Disponível em: https://www.dicio.com.br."
-                )
-                embed.add_field(
-                    name=pesquisa[0].title(),
-                    value='--'*len(pesquisa[0]),
-                    inline=False
-                )
-                cont = 0
-                for i in range(1, len(pesquisa)):
-                    if pesquisa[i] and pesquisa[i] != " ":
-                        cont += 1
-                        embed.add_field(
-                            name=f'Significado {cont}: ',
-                            value=pesquisa[i],
-                            inline=False
-                        )
-            await ctx.send(embed=embed)
+            await ctx.send(url)
             return
 
         except HTTPError:
@@ -178,5 +73,53 @@ async def dicionario(ctx, palavra):
             await ctx.send(file=imagem, embed=embed)
 
 
-def hora_atual():
-    return (datetime.now()).strftime("%H:%M:%S")
+async def wikipedia(ctx, topico):
+    try:
+        topico = topico.title()
+        wiki.set_lang("pt")
+        texto = wiki.summary(topico, sentences=3)
+        pagina = wiki.page(topico)
+        topico_url = topico.replace(' ', '_')
+        url = f'https://pt.wikipedia.org/wiki/{topico_url}'
+        embed = discord.Embed(
+            title=topico,
+            colour=discord.Colour(0x349cff),
+            url=url,
+        )
+        imagem1 = pagina.images[0]
+        imagem2 = pagina.images[1]
+        embed.set_image(url=imagem1)
+        embed.set_thumbnail(url=imagem2)
+        embed.add_field(
+            name='Resumo:',
+            value=texto,
+            inline=False
+        )
+        embed.set_footer(
+            text=f'Disponível em {url}'
+        )
+        await ctx.send(embed=embed)
+
+    except wiki.exceptions.PageError:
+        print('página não encontrada')
+        url = pesquisa_google.get_link(topico)
+        pesquisa_google.get_screenshot(url)
+        embed = discord.Embed(
+            title=f'Não consegui encontrar "{topico}" na wiki :(',
+            description='Mas pesquisei no google e encontrei isso:',
+            colour=discord.Colour(0x349cff),
+            url=url,
+        )
+        embed.set_footer(
+            text='Você pode clicar no texto em azul para abrir'
+        )
+        imagem = discord.File(
+            'screenshot.jpg',
+            filename='screenshot.jpg'
+        )
+        embed.set_image(url='attachment://screenshot.jpg')
+        topico = topico.replace('-', ' ')
+        await ctx.send(file=imagem, embed=embed)
+
+    except UserWarning:
+        print('cu')

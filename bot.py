@@ -6,8 +6,6 @@ import time
 import asyncio
 import os
 from urllib.request import urlopen
-from bs4 import BeautifulSoup
-import re
 
 import tokens
 import utils
@@ -237,13 +235,22 @@ async def help(ctx, *, argumento=''):
 
 
 @bot.command(aliases=['dicionario', 'dc', 'dict'])
-async def dicio(ctx, palavra):
+async def dicio(ctx, *, palavra):
     print(
         f'{utils.hora_atual()}: {ctx.author.name} pediu >dicio' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     await ctx.send('Opa, é pra já! Saindo no capricho')
     await utils.dicionario(ctx, palavra.lower())
+
+
+@bot.command(aliases=['wikipedia'])
+async def wiki(ctx, *, topico):
+    print(
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >wiki' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+    await utils.wikipedia(ctx, topico)
 
 
 @bot.command()
@@ -254,41 +261,8 @@ async def ping(ctx):
     )
 
     def pingar_dicio(palavra):
-        url = f'https://www.dicio.com.br/{palavra}/'
+        url = f'https://s.dicio.com.br/{palavra}.jpg'
         response = urlopen(url)
-        html = response.read()
-        soup = BeautifulSoup(html, 'html.parser')
-        text = soup.find('p')
-
-        def remove_html_tags(text):
-            clean = re.compile('<.*?>')
-            return re.sub(clean, '', text)
-
-        pesquisa = []
-
-        for txt in text:
-            pesquisa.append(remove_html_tags(str(txt)))
-
-        embed = discord.Embed(
-            title=f'{palavra.title()}\n',
-            url=url,
-            colour=discord.Colour(0x349cff)
-        )
-        embed.set_footer(text="Disponível em: https://www.dicio.com.br.")
-        embed.add_field(
-            name=pesquisa[0].title(),
-            value='--'*len(pesquisa[0]),
-            inline=False
-        )
-        cont = 0
-        for i in range(1, len(pesquisa)):
-            if pesquisa[i] and pesquisa[i] != " ":
-                cont += 1
-                embed.add_field(
-                    name=f'Significado {cont}: ',
-                    value=pesquisa[i],
-                    inline=False
-                )
         return
 
     pong = await ctx.send('pong?')
