@@ -174,6 +174,21 @@ async def on_message_delete(message):
 
 
 @bot.event
+async def on_invite_create(invite: discord.Invite):
+    print('a')
+    print(invite)
+    usuario = invite.inviter
+    await invite.delete()
+    await DMChannel.send(
+        usuario,
+        'Oi, vi aqui que você criou um convite pro servidor!' +
+        ' Muito legal convidar pessoas, mas nós temos um convite global' +
+        ' para isso, por favor use ele pra nos ajudar :)' +
+        '\nhttps://discord.gg/8JWEN4F'
+    )
+
+
+@bot.event
 async def on_message(message):
     await bot.process_commands(message)
     comando = utils.normalizar(message.content)
