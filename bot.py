@@ -108,7 +108,8 @@ async def on_command_error(ctx, error):
         await ctx.send(
             'Oops, não tenho permissão para executar esse comando 😔'
         )
-    if isinstance(error, asyncio.exceptions.TimeoutError):
+
+    if isinstance(error, asyncio.TimeoutError):
         utils.clear()
 
     else:
