@@ -7,6 +7,7 @@ import asyncio
 import os
 from urllib.request import urlopen
 from urllib.error import HTTPError
+from datetime import datetime
 
 import tokens
 import utils
@@ -14,7 +15,7 @@ import pesquisa_google
 import bot_links as links
 
 msg_cargos_pronomes = 791808051983155200
-tempo_inicial = 0
+tempo_inicial = '0'
 
 comandos_errados = [
     '-p', '-n', '-q', '-m', '-r', '!p', '-rm',
@@ -396,29 +397,20 @@ async def uptime(ctx):
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
     tempo_atual = utils.hora_atual()
-    horas_atuais = int(tempo_atual[:2])
-    minutos_atuais = int(tempo_atual[3:5])
-    horas_iniciais = int(tempo_inicial[:2])
-    minutos_iniciais = int(tempo_inicial[3:5])
-    uptime_horas = horas_atuais - horas_iniciais
-    uptime_minutos = minutos_atuais - minutos_iniciais
+    formato = '%H:%M:%S'
 
-    if uptime_horas == 0:
-        uptime_horas = '00'
-    elif uptime_horas < 10:
-        uptime_horas = f'0{uptime_horas}'
+    uptime = (
+        datetime.strptime(tempo_atual, formato) -
+        datetime.strptime(tempo_inicial, formato)
+    )
 
-    if uptime_minutos == 0:
-        uptime_minutos = '00'
+    if uptime.days < 0:
+        uptime = datetime.timedelta(
+            days=0,
+            seconds=uptime.seconds,
+            microseconds=uptime.microseconds
+        )
 
-    elif uptime_minutos < 10:
-        uptime_minutos = f'0{uptime_minutos}'
-
-    if (uptime_horas, uptime_minutos) == ('00', '00'):
-        await ctx.send('não faz nem um minuto que estou online!')
-        return
-
-    uptime = f'{uptime_horas}h{uptime_minutos}'
     await ctx.send(f'estou online há {uptime}!')
 
 
