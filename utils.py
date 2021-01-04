@@ -38,7 +38,7 @@ async def dicionario(ctx, palavra):
 
     try:
         url = f'https://s.dicio.com.br/{palavra}.jpg'
-        response = urlopen(url)
+        urlopen(url)
         await ctx.send(url)
         return
 
@@ -47,7 +47,7 @@ async def dicionario(ctx, palavra):
         try:
             palavra = palavra.replace(' ', '-')
             url = f'https://s.dicio.com.br/{palavra}.jpg'
-            response = urlopen(url)
+            urlopen(url)
             await ctx.send(url)
             return
 
