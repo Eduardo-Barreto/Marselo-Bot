@@ -6,6 +6,7 @@ import time
 import asyncio
 import os
 from urllib.request import urlopen
+from urllib.error import HTTPError
 
 import tokens
 import utils
@@ -107,6 +108,11 @@ async def on_command_error(ctx, error):
         await ctx.send(
             'Oops, não tenho permissão para executar esse comando 😔'
         )
+    if isinstance(error, asyncio.exceptions.TimeoutError):
+        utils.clear()
+
+    else:
+        print(error)
 
 
 @bot.event
@@ -261,18 +267,23 @@ async def ping(ctx):
     )
 
     def pingar_dicio(palavra):
+        init_time = int(round(time.time() * 1000))
         url = f'https://s.dicio.com.br/{palavra}.jpg'
-        response = urlopen(url)
-        return
+        try:
+            ping_dicio = urlopen(url)
+            ping_dicio = int(round(time.time() * 1000)) - init_time
+
+        except HTTPError:
+            ping_dicio = 'Fora do ar'
+
+        return ping_dicio
 
     pong = await ctx.send('pong?')
     init_time = int(round(time.time() * 1000))
     await pong.edit(content='Calculando o ping...')
     ping_marselo = int(round(time.time() * 1000)) - init_time
 
-    init_time = int(round(time.time() * 1000))
-    pingar_dicio('livro')
-    ping_dicio = int(round(time.time() * 1000)) - init_time
+    ping_dicio = pingar_dicio('livro')
 
     init_time = int(round(time.time() * 1000))
     url = pesquisa_google.get_link('livro')
@@ -292,11 +303,18 @@ async def ping(ctx):
         value=f'{ping_marselo}ms',
         inline=False
     )
-    embed.add_field(
-        name='Ping Dicio:',
-        value=f'{ping_dicio}ms',
-        inline=False
-    )
+    if type(ping_dicio) == str:
+        embed.add_field(
+            name='Ping Dicio:',
+            value=f'{ping_dicio}',
+            inline=False
+        )
+    else:
+        embed.add_field(
+            name='Ping Dicio:',
+            value=f'{ping_dicio}ms',
+            inline=False
+        )
     embed.add_field(
         name='Ping Google:',
         value=f'{ping_google}ms',
