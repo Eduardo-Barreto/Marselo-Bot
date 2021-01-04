@@ -175,9 +175,8 @@ async def on_message_delete(message):
 
 @bot.event
 async def on_invite_create(invite: discord.Invite):
-    print('a')
-    print(invite)
     usuario = invite.inviter
+    print(f'{usuario.name} criou um convite')
     await invite.delete()
     await DMChannel.send(
         usuario,
