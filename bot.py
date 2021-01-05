@@ -417,10 +417,11 @@ async def uptime(ctx):
 
 @bot.command(aliases=['dado', 'rolar', 'dice'])
 async def roll(ctx, valor):
-    dado = valor.replace('d', '')
+    dado = valor.lower()
+    dado = dado.replace('d', '')
     numero = randint(0, int(dado))
     await ctx.send(
-        f':game_die: Você rolou um `d{dado}`' +
+        f':game_die: <@{ctx.author.id}> rolou um `d{dado}`' +
         f' e conseguiu um `{numero}`! :game_die:')
 
 
