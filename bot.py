@@ -433,10 +433,7 @@ async def roll(ctx, valor):
     ]
 )
 async def sort(ctx, *, lista):
-    escolher = lista.split(', ')
-
-    if len(escolher) <= 1:
-        escolher = lista.split(',')
+    escolher = lista.split(',')
 
     escolhido = randint(0, (len(escolher) - 1))
     await ctx.send(
