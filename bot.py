@@ -474,6 +474,17 @@ async def jokenpo(ctx, *, elemento):
         await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
         return
 
+    elif(
+        not elemento.startswith('pedra') and
+        not elemento.startswith('papel') and
+        not elemento.startswith('tesoura')
+    ):
+        await ctx.send(
+            'ah :pensive: o elemento deve estar depois do comando' +
+            ', tipo `>jokenpo pedra`'
+        )
+        return
+
     else:
         await ctx.send(f'escolhi `{minha_escolha}` e perdi :pensive:')
         return
