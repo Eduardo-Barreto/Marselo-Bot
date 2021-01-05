@@ -422,7 +422,26 @@ async def roll(ctx, valor):
     numero = randint(0, int(dado))
     await ctx.send(
         f':game_die: <@{ctx.author.id}> rolou um `d{dado}`' +
-        f' e conseguiu um `{numero}`! :game_die:')
+        f' e conseguiu um `{numero}`! :game_die:'
+    )
+
+
+@bot.command(
+    aliases=[
+        'xorx', 'sortear', 'sorteio',
+        'escolher', 'choose', 'pick',
+    ]
+)
+async def sort(ctx, *, lista):
+    escolher = lista.split(', ')
+
+    if len(escolher) <= 1:
+        escolher = lista.split(',')
+
+    escolhido = randint(0, (len(escolher) - 1))
+    await ctx.send(
+        f'<@{ctx.author.id}> eu escolho... `{escolher[escolhido]}`!'
+    )
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
