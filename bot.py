@@ -436,8 +436,10 @@ async def sort(ctx, *, lista):
     escolher = lista.split(',')
 
     escolhido = randint(0, (len(escolher) - 1))
+
+    escolhido_final = escolher[escolhido]
     await ctx.send(
-        f'<@{ctx.author.id}> eu escolho... `{escolher[escolhido]}`!'
+        f'<@{ctx.author.id}> eu escolho... `{escolhido_final.strip()}`!'
     )
 
 
