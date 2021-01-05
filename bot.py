@@ -443,6 +443,53 @@ async def sort(ctx, *, lista):
     )
 
 
+@bot.command(aliases=['jp'])
+async def jokenpo(ctx, *, elemento):
+    elementos = ['pedra', 'papel', 'tesoura']
+
+    counter = 0
+    for item in elementos:
+        if item in elemento:
+            counter += 1
+
+    if counter != 1:
+        await ctx.send('por favor use um elemento valido :pensive:')
+        return
+
+    minha_escolha = elementos[randint(0, 2)]
+
+    if elemento.startswith(minha_escolha):
+        await ctx.send(f'escolhi `{minha_escolha}` e deu empate :handshake:')
+        return
+
+    elif minha_escolha == 'papel' and elemento.startswith('pedra'):
+        await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
+        return
+
+    elif minha_escolha == 'pedra' and elemento.startswith('tesoura'):
+        await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
+        return
+
+    elif minha_escolha == 'tesoura' and elemento.startswith('papel'):
+        await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
+        return
+
+    else:
+        await ctx.send(f'escolhi `{minha_escolha}` e perdi :pensive:')
+        return
+
+
+@bot.command()
+async def marselo(ctx):
+    url = "https://youtu.be/dQw4w9WgXcQ"
+    embed = discord.Embed(
+        title='Verdade linda\n', url=url, colour=discord.Colour(0x349cff)
+    )
+    embed.add_field(name='Concordo', value='MUUUIIITOOO', inline=False)
+    embed.set_footer(text="com o que disse")
+    await ctx.send(embed=embed)
+
+
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
