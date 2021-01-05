@@ -8,6 +8,7 @@ import os
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from datetime import datetime
+from random import randint
 
 import tokens
 import utils
@@ -412,6 +413,13 @@ async def uptime(ctx):
         )
 
     await ctx.send(f'estou online há {uptime}!')
+
+
+@bot.command(aliases=['dado', 'rolar', 'dice'])
+async def roll(ctx, *, valor):
+    dado = valor.replace('d', '')
+    numero = randint(0, int(dado))
+    await ctx.send(f'Você rolou um `d{dado}` e conseguiu um `{numero}`!')
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
