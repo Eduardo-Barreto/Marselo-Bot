@@ -56,7 +56,7 @@ async def on_ready():
         )
     )
     edu = await bot.fetch_user(tokens.eduardo_id)
-    await DMChannel.send(edu, 'estou online!')
+    await DMChannel.send(edu, 'estou online!', delete_after=5)
     print(f'estou online, loguei em {bot.user}')
 
 
