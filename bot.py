@@ -25,16 +25,24 @@ comandos_errados = [
 ]
 
 
-def check_anti_log(mensagem):
+def check_anti_log(message):
+    texto = message.content
+
     for comando in bot.commands:
-        if (str(comando) in mensagem):
+        if (str(comando) in texto):
             return False
+
         for alias in comando.aliases:
-            if str(alias) in mensagem:
+            if str(alias) in texto:
                 return False
+
     for comando in comandos_errados:
-        if (str(comando) in utils.normalizar(mensagem)):
+        if (str(comando) in utils.normalizar(texto)):
             return False
+
+    if 'discord.com/channels' in texto:
+        return False
+
     return True
 
 
@@ -159,9 +167,16 @@ async def on_raw_reaction_remove(payload):
 @bot.event
 async def on_message_delete(message):
     global anti_raid
+
+    if message.author == bot.user:
+        return
+
+    if str(message.channel).startswith('Direct Message'):
+        return
+
     if(
         (message.channel.name != 'log-deleted')
-        and check_anti_log(message.content)
+        and check_anti_log(message)
         and message.author.id != 234395307759108106
         and message.author.id != 235088799074484224
     ):
@@ -202,16 +217,16 @@ async def on_message(message):
     if ((comando[0:2] in comandos_errados)
        or (comando[0:3] in comandos_errados)):
 
-        if not str(ctx.name).startswith('comando'):
+        if not str(ctx).startswith('comando'):
             try:
                 await message.delete()
             except discord.Forbidden:
                 await ctx.send(
-                    'você enviou um comando para um outro bot,' +
+                    'Você enviou um comando para um outro bot,' +
                     ' mas foi no canal errado...'
                 )
                 await ctx.send(
-                    'normalmente eu só apago' +
+                    'Normalmente eu só apago,' +
                     ' mas aparentemente não tenho essa permissão aqui.'
                 )
         return
@@ -573,6 +588,34 @@ async def unban(ctx, *, membro):
                 f' desbaniu {usuario.name}'
             )
             return
+
+
+@bot.command()
+@commands.has_permissions(manage_channels=True)
+async def lock(ctx, role: discord.Role):
+    await ctx.send(
+        f'Bloqueando todos os canais para o cargo `{role}`, aguarde...'
+    )
+    for channel in ctx.guild.channels:
+        await channel.set_permissions(role, send_messages=False)
+
+    await ctx.send(
+        f'Todos os canais estão bloqueados para o cargo `{role}`.'
+    )
+
+
+@bot.command()
+@commands.has_permissions(manage_channels=True)
+async def unlock(ctx, role: discord.Role):
+    await ctx.send(
+        f'Desbloqueando todos os canais para o cargo `{role}`, aguarde...'
+    )
+    for channel in ctx.guild.channels:
+        await channel.set_permissions(role, send_messages=True)
+
+    await ctx.send(
+        f'Todos os canais estão liberados para o cargo `{role}`.'
+    )
 
 
 @bot.command()
