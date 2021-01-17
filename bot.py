@@ -517,6 +517,60 @@ async def marselo(ctx):
     await ctx.send(embed=embed)
 
 
+@bot.command(aliases=['emoji'])
+async def emojis(ctx, *, frase):
+    frase = utils.normalizar(frase)
+    to_replace = [
+        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+',
+        '=', '"', ',', '?', '.', ':', '~', '>', '<', '{', '}', ';'
+    ]
+
+    for item in to_replace:
+        frase = frase.replace(item, '')
+
+    frase = frase.strip()
+
+    emojis = ''
+
+    for letra in frase:
+        try:
+            letra = int(letra)
+
+            if letra == 0:
+                emojis += ':zero:'
+            elif letra == 1:
+                emojis += ':one:'
+            elif letra == 2:
+                emojis += ':two:'
+            elif letra == 3:
+                emojis += ':three:'
+            elif letra == 4:
+                emojis += ':four:'
+            elif letra == 5:
+                emojis += ':five:'
+            elif letra == 6:
+                emojis += ':six:'
+            elif letra == 7:
+                emojis += ':seven:'
+            elif letra == 8:
+                emojis += ':eight:'
+            elif letra == 9:
+                emojis += ':nine:'
+
+        except ValueError:
+            letras = [
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+                'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+                's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+            ]
+            if letra in letras:
+                emojis += f':regional_indicator_{letra}:'
+            else:
+                emojis += ' '
+
+    await ctx.send(emojis)
+
+
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
@@ -597,7 +651,12 @@ async def lock(ctx, role: discord.Role):
         f'Bloqueando todos os canais para o cargo `{role}`, aguarde...'
     )
     for channel in ctx.guild.channels:
-        await channel.set_permissions(role, send_messages=False)
+        try:
+            await channel.set_permissions(role, send_messages=False)
+        except discord.Forbidden:
+            await ctx.send(
+                f'Não consegui bloquear o canal `{channel}`'
+            )
 
     await ctx.send(
         f'Todos os canais estão bloqueados para o cargo `{role}`.'
@@ -611,7 +670,12 @@ async def unlock(ctx, role: discord.Role):
         f'Desbloqueando todos os canais para o cargo `{role}`, aguarde...'
     )
     for channel in ctx.guild.channels:
-        await channel.set_permissions(role, send_messages=True)
+        try:
+            await channel.set_permissions(role, send_messages=True)
+        except discord.Forbidden:
+            await ctx.send(
+                    f'Não consegui desbloquear o canal `{channel}`'
+                )
 
     await ctx.send(
         f'Todos os canais estão liberados para o cargo `{role}`.'
