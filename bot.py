@@ -21,7 +21,7 @@ tempo_inicial = '0'
 comandos_errados = [
     '-p', '-n', '-q', '-m', '-r', '!p', '-rm',
     '-rf', '-rr', '-rw', '-ff', 'ar!', '-go',
-    '-di'
+    '-di', '-l'
 ]
 
 
