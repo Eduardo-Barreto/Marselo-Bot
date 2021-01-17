@@ -682,69 +682,68 @@ async def unlock(ctx, role: discord.Role):
     )
 
 
+@commands.is_owner()
 @bot.command()
 async def cls(ctx):
-    if ctx.author.id == tokens.eduardo_id:
-        utils.clear()
-        await ctx.message.delete()
+    utils.clear()
+    await ctx.message.delete()
 
 
+@commands.is_owner()
 @bot.command()
 async def status(ctx, *, status):
 
-    if ctx.author.id == tokens.eduardo_id:
-
-        if status.startswith('padrao'):
-            await bot.change_presence(
-                activity=discord.Activity(
-                    type=discord.ActivityType.watching,
-                    name='github.com/Eduardo-Barreto/Marselo-Bot/'
-                )
+    if status.startswith('padrao'):
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name='github.com/Eduardo-Barreto/Marselo-Bot/'
             )
+        )
 
-        if status.startswith('jogando'):
-            name = status.replace('jogando ', '')
-            await bot.change_presence(activity=discord.Game(name=name))
+    if status.startswith('jogando'):
+        name = status.replace('jogando ', '')
+        await bot.change_presence(activity=discord.Game(name=name))
 
-        if status.startswith('ouvindo'):
-            name = status.replace('ouvindo ', '')
-            await bot.change_presence(
-                activity=discord.Activity(
-                    type=discord.ActivityType.listening,
-                    name=name
-                )
+    if status.startswith('ouvindo'):
+        name = status.replace('ouvindo ', '')
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.listening,
+                name=name
             )
+        )
 
-        if status.startswith('assistindo'):
-            name = status.replace('assistindo ', '')
-            await bot.change_presence(
-                activity=discord.Activity(
-                    type=discord.ActivityType.watching,
-                    name=name
-                )
+    if status.startswith('assistindo'):
+        name = status.replace('assistindo ', '')
+        await bot.change_presence(
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name=name
             )
+        )
 
-        utils.clear()
-        print(f'Status alterado para "{status}"')
-        await ctx.message.delete()
+    utils.clear()
+    print(f'Status alterado para "{status}"')
+    await ctx.message.delete()
 
 
+@commands.is_owner()
 @bot.command()
 async def atualizar(ctx):
-    if ctx.author.id == tokens.eduardo_id:
-        await ctx.message.delete()
-        os.chdir('..')
-        os.system('sudo rm -R Marselo-Bot')
-        os.system(
-            'git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git'
-        )
-        os.system(
-            'cp /home/pi/Desktop/tokens.py /home/pi/Desktop/Marselo-Bot'
-        )
-        os.chdir('Marselo-Bot')
-        os.system('clear')
-        os.system('python3 bot.py')
-        quit()
+    await ctx.message.delete()
+    os.chdir('..')
+    os.system('sudo rm -R Marselo-Bot')
+    os.system(
+        'git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git'
+    )
+    os.system(
+        'cp /home/pi/Desktop/tokens.py /home/pi/Desktop/Marselo-Bot'
+    )
+    os.chdir('Marselo-Bot')
+    os.system('clear')
+    os.system('python3 bot.py')
+    quit()
 
 
 bot.run(tokens.discord)
