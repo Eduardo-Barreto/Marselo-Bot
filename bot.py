@@ -211,8 +211,14 @@ async def on_message(message):
     comando = utils.normalizar(message.content)
     ctx = message.channel
 
+    comando_processado = utils.processar(comando)
+
     if message.author == bot.user:
         return
+
+    if comando_processado in ['q tampa', 'que tampa']:
+        await ctx.send('a tampa do seu cu viadokkkjkljk')
+        await ctx.send('trollei')
 
     if ((comando[0:2] in comandos_errados)
        or (comando[0:3] in comandos_errados)):
@@ -569,6 +575,27 @@ async def emojis(ctx, *, frase):
                 emojis += ' '
 
     await ctx.send(emojis)
+
+
+@bot.command(alisaes=['cancelamento', 'cancelado'])
+async def cancelar(ctx, *, nome):
+    nome = utils.processar(nome)
+
+    print(
+        f'{utils.hora_atual()}: {ctx.author.name} pediu >cancelar' +
+        f' no server {ctx.guild}, no canal {ctx.channel}'
+    )
+
+    arquivo = open('cancelamentos.txt', 'r', encoding="utf-8")
+    cancelamentos = arquivo.readlines()
+    escolhido = randint(0, (len(cancelamentos) - 1))
+    motivo = cancelamentos[escolhido]
+    arquivo.close()
+
+    if nome == 'eu':
+        nome = 'vc'
+
+    await ctx.send(f'{nome} foi cancelade por {motivo}')
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
