@@ -22,6 +22,22 @@ def hora_atual():
     return (datetime.now()).strftime("%H:%M:%S")
 
 
+def processar(texto):
+    to_replace = [
+        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+',
+        '=', '"', ',', '?', '.', ':', '~', '>', '<', '{', '}', ';'
+    ]
+    for item in to_replace:
+        texto = texto.replace(item, '')
+    texto = texto.strip()
+
+    for numero in range(10):
+        texto = texto.replace(str(numero), '')
+    texto = texto.strip()
+
+    return texto
+
+
 async def dicionario(ctx, palavra):
 
     palavra = normalizar(palavra)
