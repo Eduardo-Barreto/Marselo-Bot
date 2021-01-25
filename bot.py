@@ -124,6 +124,7 @@ async def on_command_error(ctx, error):
         utils.clear()
 
     else:
+        utils.clear()
         print(error)
 
 
@@ -393,23 +394,29 @@ async def reminder(ctx, *, lembrar):
 
     unidade = base_tempo[1]
     await ctx.send(f'Ok <@{membro}>, vou te lembrar sobre {lembrar}!')
+
     if unidade.startswith('segundo'):
         await asyncio.sleep(tempo)
-        await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
     elif unidade.startswith('minuto'):
         tempo = tempo*60
         await asyncio.sleep(tempo)
-        await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
     elif unidade.startswith('hora'):
         tempo = tempo*3600
         await asyncio.sleep(tempo)
-        await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
     else:
         await ctx.send(
             'Oops, você digitou algo inválido, lembre-se:' +
             'a sintaxe do comando é `>lembrar {sobre} em {tempo}' +
             ' {unidade(segundos/minutos/horas)}`'
         )
+        return
+
+    await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+    user = await bot.fetch_user(membro)
+    await DMChannel.send(
+        user,
+        f'Oi <@{membro}>, vim te lembrar sobre {sobre}!'
+    )
 
 
 @bot.command()
@@ -585,6 +592,10 @@ async def cancelar(ctx, *, nome):
         f'{utils.hora_atual()}: {ctx.author.name} pediu >cancelar' +
         f' no server {ctx.guild}, no canal {ctx.channel}'
     )
+
+    if nome == 'marselo':
+        await ctx.send('o marselo não pode ser cancelado.')
+        return
 
     arquivo = open('cancelamentos.txt', 'r', encoding="utf-8")
     cancelamentos = arquivo.readlines()
