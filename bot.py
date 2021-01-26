@@ -581,8 +581,9 @@ async def emojis(ctx, *, frase):
             else:
                 emojis += ' '
 
-    emojis = emojis.replace(' ', '  ')
-    await ctx.send(f'{emojis}.')
+    if (not emojis.isspace()) and (not emojis == ''):
+        emojis = emojis.replace(' ', '  ')
+        await ctx.send(f'{emojis}.')
 
 
 @bot.command(alisaes=['cancelamento', 'cancelado'])
