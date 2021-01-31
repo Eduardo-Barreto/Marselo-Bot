@@ -363,7 +363,7 @@ async def ping(ctx):
     await pong.edit(content='Pong!', embed=embed)
 
 
-@bot.command(aliases=['lembrar', 'lembre'])
+@bot.command(aliases=['lembrar', 'lembre', 'remind'])
 async def reminder(ctx, *, lembrar):
     print(
         f'{utils.hora_atual()}: {ctx.author.name} pediu >reminder' +
@@ -586,7 +586,7 @@ async def emojis(ctx, *, frase):
         await ctx.send(f'{emojis}.')
 
 
-@bot.command(alisaes=['cancelamento', 'cancelado'])
+@bot.command(aliasaes=['cancelamento', 'cancelado'])
 async def cancelar(ctx, *, nome):
     nome = utils.processar(nome)
 
@@ -609,6 +609,14 @@ async def cancelar(ctx, *, nome):
         nome = 'vc'
 
     await ctx.send(f'{nome} foi cancelade por {motivo}')
+
+
+@bot.command(aliases=['dani', 'danone', 'danonelas'])
+async def daniela(ctx):
+    if ctx.author.id == 552500436452638727:
+        await ctx.send('faz a lista daniela.')
+        return
+    await ctx.send('pede pra <@552500436452638727> fazer a lista.')
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
