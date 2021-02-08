@@ -816,4 +816,11 @@ async def atualizar(ctx):
     os.system('python3 bot.py')
     quit()
 
+
+@commands.is_owner()
+@bot.command(aliases=['send'])
+async def enviar(ctx, *, message):
+    print(message)
+
+
 bot.run(tokens.discord)
