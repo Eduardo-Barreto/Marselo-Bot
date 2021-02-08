@@ -1,3 +1,8 @@
+import tokens
+import utils
+import pesquisa_google
+import bot_links as links
+
 import discord
 from discord import DMChannel
 from discord.ext import commands
@@ -8,12 +13,8 @@ import os
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from datetime import datetime
-from random import randint
+from random import randint, seed, choice
 
-import tokens
-import utils
-import pesquisa_google
-import bot_links as links
 
 msg_cargos_pronomes = 791808051983155200
 tempo_inicial = '0'
@@ -49,7 +50,7 @@ def check_anti_log(message):
 intents = discord.Intents.all()
 bot = commands.Bot(
     command_prefix='>', case_insensitive=True,
-    intents=intents, help_command=None
+    intents=intents
 )
 
 
@@ -264,7 +265,7 @@ async def on_message(message):
         )
 
 
-@bot.command(aliases=['ajuda'])
+""" @bot.command(aliases=['ajuda'])
 async def help(ctx, *, argumento=''):
     print(
         f'{utils.hora_atual()}: {ctx.author.name} pediu >help' +
@@ -277,7 +278,7 @@ async def help(ctx, *, argumento=''):
         await ctx.send(
             'Você pode encontrar todos os comandos em:' +
             f' {links.readme}'
-        )
+        ) """
 
 
 @bot.command(aliases=['dicionario', 'dc', 'dict'])
@@ -462,18 +463,30 @@ async def roll(ctx, valor):
     ]
 )
 async def sort(ctx, *, lista):
+
     escolher = lista.split(',')
 
-    escolhido = randint(0, (len(escolher) - 1))
+    seed()
+    escolhido = choice(escolher)
 
-    escolhido_final = escolher[escolhido]
-    await ctx.send(
-        f'<@{ctx.author.id}> eu escolho... `{escolhido_final.strip()}`!'
+    embed = discord.Embed(
+        title=f'Eu escolho: `{escolhido.strip()}`',
+        colour=discord.Colour(0x349cff),
+        description=f'**Opções**: {lista}'
     )
+    embed.set_thumbnail(
+        url='https://cdn.dribbble.com/users/' +
+        '1075028/screenshots/5768477/dice.gif'
+    )
+    embed.set_footer(
+        text='Talvez esteja na hora de aprender' +
+        ' a tomar suas próprias decisões...'
+    )
+    await ctx.send(embed=embed)
 
 
 @bot.command(aliases=['jp'])
-async def jokenpo(ctx, *, elemento):
+async def jokenpo(ctx, elemento):
     elementos = ['pedra', 'papel', 'tesoura']
 
     counter = 0
@@ -485,23 +498,20 @@ async def jokenpo(ctx, *, elemento):
         await ctx.send('por favor use um elemento valido :pensive:')
         return
 
-    minha_escolha = elementos[randint(0, 2)]
+    seed()
+    minha_escolha = choice(elementos)
 
     if elemento.startswith(minha_escolha):
-        await ctx.send(f'escolhi `{minha_escolha}` e deu empate :handshake:')
-        return
+        resultado = 'Empate!'
 
     elif minha_escolha == 'papel' and elemento.startswith('pedra'):
-        await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
-        return
+        resultado = 'Ganhei!'
 
     elif minha_escolha == 'pedra' and elemento.startswith('tesoura'):
-        await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
-        return
+        resultado = 'Ganhei!'
 
     elif minha_escolha == 'tesoura' and elemento.startswith('papel'):
-        await ctx.send(f'escolhi `{minha_escolha}` e ganhei :sunglasses:')
-        return
+        resultado = 'Ganhei!'
 
     elif(
         not elemento.startswith('pedra') and
@@ -515,8 +525,21 @@ async def jokenpo(ctx, *, elemento):
         return
 
     else:
-        await ctx.send(f'escolhi `{minha_escolha}` e perdi :pensive:')
-        return
+        resultado = 'Perdi!'
+
+    embed = discord.Embed(
+        title=f'{resultado}',
+        colour=discord.Colour(0x349cff),
+        description=f'Eu escolhi `{minha_escolha}`'
+    )
+    embed.set_thumbnail(
+        url='https://blogdoiphone.com/wp-content/' +
+        'uploads/2019/08/pedra-papel-tesoura.jpg'
+    )
+    embed.set_footer(
+        text=f'E você escolheu {elemento}'
+    )
+    await ctx.send(embed=embed)
 
 
 @bot.command()
@@ -526,7 +549,7 @@ async def marselo(ctx):
         title='Verdade linda\n', url=url, colour=discord.Colour(0x349cff)
     )
     embed.add_field(name='Concordo', value='MUUUIIITOOO', inline=False)
-    embed.set_footer(text="com o que disse")
+    embed.set_footer(text="com o que vc disse")
     await ctx.send(embed=embed)
 
 
@@ -583,7 +606,7 @@ async def emojis(ctx, *, frase):
 
     if (not emojis.isspace()) and (not emojis == ''):
         emojis = emojis.replace(' ', '  ')
-        await ctx.send(f'{emojis}.')
+        await ctx.send(f'{emojis}⠀')
 
 
 @bot.command(aliasaes=['cancelamento', 'cancelado'])
@@ -739,7 +762,7 @@ async def cls(ctx):
 
 @commands.is_owner()
 @bot.command()
-async def status(ctx, *, status):
+async def status(ctx, lang, *, status):
 
     if status.startswith('padrao'):
         await bot.change_presence(
@@ -792,6 +815,5 @@ async def atualizar(ctx):
     os.system('clear')
     os.system('python3 bot.py')
     quit()
-
 
 bot.run(tokens.discord)
