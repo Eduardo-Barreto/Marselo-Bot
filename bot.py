@@ -50,7 +50,7 @@ def check_anti_log(message):
 intents = discord.Intents.all()
 bot = commands.Bot(
     command_prefix='>', case_insensitive=True,
-    intents=intents
+    intents=intents, help_command=None
 )
 
 
@@ -265,7 +265,7 @@ async def on_message(message):
         )
 
 
-""" @bot.command(aliases=['ajuda'])
+@bot.command(aliases=['ajuda'])
 async def help(ctx, *, argumento=''):
     print(
         f'{utils.hora_atual()}: {ctx.author.name} pediu >help' +
@@ -278,7 +278,7 @@ async def help(ctx, *, argumento=''):
         await ctx.send(
             'Você pode encontrar todos os comandos em:' +
             f' {links.readme}'
-        ) """
+        )
 
 
 @bot.command(aliases=['dicionario', 'dc', 'dict'])
