@@ -264,6 +264,9 @@ async def on_message(message):
             embed=embed
         )
 
+    if ('marselo não presta' in comando) and (message.author.id == 779337271055745025):
+        await ctx.send('que isso irmao sou teu tio me respeita')
+
 
 @bot.command(aliases=['ajuda'])
 async def help(ctx, *, argumento=''):
