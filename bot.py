@@ -14,6 +14,9 @@ from urllib.request import urlopen
 from urllib.error import HTTPError
 from datetime import datetime
 from random import randint, seed, choice
+from googletrans import Translator
+
+translator = Translator()
 
 
 msg_cargos_pronomes = 791808051983155200
@@ -263,9 +266,6 @@ async def on_message(message):
             file=imagem,
             embed=embed
         )
-
-    if ('marselo não presta' in comando) and (message.author.id == 779337271055745025):
-        await ctx.send('que isso irmao sou teu tio me respeita')
 
 
 @bot.command(aliases=['ajuda'])
@@ -645,6 +645,22 @@ async def daniela(ctx):
     await ctx.send('pede pra <@552500436452638727> fazer a lista.')
 
 
+@bot.command(aliases=['traduzir', 'trans'])
+async def translate(ctx, *, frase):
+    traducao = translator.translate(frase, dest='pt')
+
+    embed = discord.Embed(
+        title=traducao.text,
+        colour=discord.Colour(0x349cff),
+        description=f'"{frase}" traduzido para o português'
+    )
+    embed.set_thumbnail(url='https://translate.google.com/' +
+                            'about/website/images/translate_logo.png')
+    embed.set_footer(text='marselo! Fonte: Google Translator')
+
+    await ctx.send(embed=embed)
+
+
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
@@ -754,6 +770,16 @@ async def unlock(ctx, role: discord.Role):
     await ctx.send(
         f'Todos os canais estão liberados para o cargo `{role}`.'
     )
+
+
+@bot.command(aliases=['rfr'])
+@commands.has_permissions(manage_roles=True)
+async def removefromrole(ctx, role: discord.Role):
+
+    for member in role.members:
+        await member.remove_roles(role)
+
+    await ctx.send('Cargos removidos com sucesso!')
 
 
 @commands.is_owner()
