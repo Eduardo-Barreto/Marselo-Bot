@@ -226,7 +226,7 @@ async def on_message(message):
         await ctx.send('trollei')
 
     if ((comando[0:2] in comandos_errados)
-       or (comando[0:3] in comandos_errados)):
+            or (comando[0:3] in comandos_errados)):
 
         if not str(ctx).startswith('comando'):
             try:
@@ -652,23 +652,29 @@ async def translate(ctx, *, frase):
     origem = str(traducao.src).upper()
     destino = str(traducao.dest).upper()
 
-    embed = discord.Embed(
-        title=traducao.text,
-        colour=discord.Colour(0x349cff),
-        description=f'Tradução de **{origem}** para **{destino}**'
-    )
-    embed.set_thumbnail(url='https://translate.google.com/' +
-                            'about/website/images/translate_logo.png')
+    if origem != 'PT':
+        embed = discord.Embed(
+            title=traducao.text,
+            colour=discord.Colour(0x349cff),
+            description=f'Tradução de **{origem}** para **{destino}**'
+        )
+        embed.set_thumbnail(url='https://translate.google.com/' +
+                                'about/website/images/translate_logo.png')
 
-    embed.add_field(
-        name='\n\nTexto original:',
-        value=f'`{frase}`',
-        inline=False
-    )
+        embed.add_field(
+            name='\n\nTexto original:',
+            value=f'`{frase}`',
+            inline=False
+        )
 
-    embed.set_footer(text='marselo! Fonte: Google Translator')
+        embed.set_footer(text='marselo! Fonte: Google Translator')
 
-    await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
+    else:
+        await ctx.send(
+            f'Isso já está em português, <@{ctx.author.id}>!' +
+            '\nou eu to maluco...'
+        )
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
@@ -774,8 +780,8 @@ async def unlock(ctx, role: discord.Role):
             await channel.set_permissions(role, send_messages=True)
         except discord.Forbidden:
             await ctx.send(
-                    f'Não consegui desbloquear o canal `{channel}`'
-                )
+                f'Não consegui desbloquear o canal `{channel}`'
+            )
 
     await ctx.send(
         f'Todos os canais estão liberados para o cargo `{role}`.'
