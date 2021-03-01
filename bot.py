@@ -841,6 +841,9 @@ async def atualizar(ctx):
         'cp /home/pi/Desktop/tokens.py /home/pi/Desktop/Marselo-Bot'
     )
     os.chdir('Marselo-Bot')
+    os.system('python3 -m venv marselo')
+    os.system('pip3 install -r requirements.txt')
+    os.system('source ./marselo/bin/activate')
     os.system('clear')
     os.system('python3 bot.py')
     quit()
