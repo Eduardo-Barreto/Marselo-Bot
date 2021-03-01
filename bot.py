@@ -659,16 +659,127 @@ async def daniela(ctx):
 
 @bot.command(aliases=['traduzir', 'trans'])
 async def translate(ctx, *, frase):
+    languages = {
+        'af': 'africâner',
+        'sq': 'albanês',
+        'am': 'amárico',
+        'ar': 'árabe',
+        'hy': 'armenian',
+        'az': 'armênio',
+        'eu': 'basco',
+        'be': 'bielorrusso',
+        'bn': 'bengalês',
+        'bs': 'bósnio',
+        'bg': 'búlgaro',
+        'ca': 'catalão',
+        'ceb': 'cebuano',
+        'ny': 'nianja',
+        'zh-cn': 'chinês (simplificado)',
+        'zh-tw': 'chinês (tradicional)',
+        'co': 'corsa',
+        'hr': 'croata',
+        'cs': 'tcheco',
+        'da': 'dinamarquês',
+        'nl': 'holandês',
+        'en': 'inglês',
+        'eo': 'esperanto',
+        'et': 'estoniano',
+        'tl': 'filipino',
+        'fi': 'finlandês',
+        'fr': 'francês',
+        'fy': 'frisio',
+        'gl': 'galego',
+        'ka': 'georgiano',
+        'de': 'alemão',
+        'el': 'grego',
+        'gu': 'gujarati',
+        'ht': 'haitiano',
+        'ha': 'hausa',
+        'haw': 'havaiano',
+        'iw': 'hebrew',
+        'he': 'hebraico',
+        'hi': 'hindi',
+        'hmn': 'hmong',
+        'hu': 'húngaro',
+        'is': 'islandês',
+        'ig': 'igbo',
+        'id': 'indonésio',
+        'ga': 'irlandês',
+        'it': 'italiano',
+        'ja': 'japonês',
+        'jw': 'javanês',
+        'kn': 'canarim',
+        'kk': 'cazaque',
+        'km': 'khmer',
+        'ko': 'coreano',
+        'ku': 'curdo (kurmanji)',
+        'ky': 'quirguiz',
+        'lo': 'laociano',
+        'la': 'latin',
+        'lv': 'letão',
+        'lt': 'lituano',
+        'lb': 'luxemburguês',
+        'mk': 'macedônio',
+        'mg': 'malgaxe',
+        'ms': 'malaio',
+        'ml': 'malayalam',
+        'mt': 'maltês',
+        'mi': 'maori',
+        'mr': 'marati',
+        'mn': 'mongol',
+        'my': 'myanmar (birmanês)',
+        'ne': 'nepali',
+        'no': 'norueguês',
+        'or': 'odia',
+        'ps': 'pashto',
+        'fa': 'persa',
+        'pl': 'polonês',
+        'pt': 'português',
+        'pa': 'punjabi',
+        'ro': 'romeno',
+        'ru': 'russo',
+        'sm': 'samoano',
+        'gd': 'gaélico escocês',
+        'sr': 'sérvio',
+        'st': 'sesotho',
+        'sn': 'shona',
+        'sd': 'sindhi',
+        'si': 'sinhala',
+        'sk': 'eslovaco',
+        'sl': 'esloveno',
+        'so': 'somali',
+        'es': 'espanhol',
+        'su': 'sundanês',
+        'sw': 'suaíli',
+        'sv': 'sueco',
+        'tg': 'tajique',
+        'ta': 'tâmil',
+        'te': 'telugu',
+        'th': 'tailandês',
+        'tr': 'turco',
+        'uk': 'ucraniano',
+        'ur': 'urdu',
+        'ug': 'uyghur',
+        'uz': 'uzbeque',
+        'vi': 'vietnamita',
+        'cy': 'galês',
+        'xh': 'xhosa',
+        'yi': 'iídiche',
+        'yo': 'ioruba',
+        'zu': 'zulu'
+    }
     traducao = translator.translate(frase, dest='pt')
 
-    origem = str(traducao.src).upper()
-    destino = str(traducao.dest).upper()
+    origem = traducao.src
+    destino = traducao.dest
 
     if origem != 'PT':
         embed = discord.Embed(
             title=traducao.text,
             colour=discord.Colour(0x349cff),
-            description=f'Tradução de **{origem}** para **{destino}**'
+            description=f'Tradução de **{languages[origem].title()}' +
+                        f'({origem.upper()})** para **' +
+                        f'{languages[destino].title()}({destino.upper()})**'
         )
         embed.set_thumbnail(url='https://translate.google.com/' +
                                 'about/website/images/translate_logo.png')
@@ -921,6 +1032,9 @@ async def atualizar(ctx):
     )
     os.system(
         'cp /home/pi/Desktop/tokens.py /home/pi/Desktop/Marselo-Bot'
+    )
+    os.system(
+        'cp /home/pi/Desktop/.cache /home/pi/Desktop/Marselo-Bot'
     )
     os.chdir('Marselo-Bot')
     os.system('python3 -m venv marselo')
