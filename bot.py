@@ -649,13 +649,23 @@ async def daniela(ctx):
 async def translate(ctx, *, frase):
     traducao = translator.translate(frase, dest='pt')
 
+    origem = str(traducao.src).upper()
+    destino = str(traducao.dest).upper()
+
     embed = discord.Embed(
         title=traducao.text,
         colour=discord.Colour(0x349cff),
-        description=f'"{frase}" traduzido para o português'
+        description=f'Tradução de **{origem}** para **{destino}**'
     )
     embed.set_thumbnail(url='https://translate.google.com/' +
                             'about/website/images/translate_logo.png')
+
+    embed.add_field(
+        name='\n\nTexto original:',
+        value=f'`{frase}`',
+        inline=False
+    )
+
     embed.set_footer(text='marselo! Fonte: Google Translator')
 
     await ctx.send(embed=embed)
