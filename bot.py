@@ -15,8 +15,26 @@ from urllib.error import HTTPError
 from datetime import datetime
 from random import randint, seed, choice
 from googletrans import Translator
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+
+
+sp = spotipy.Spotify(
+    auth_manager=SpotifyOAuth(
+        client_id=tokens.spotify_id,
+        client_secret=tokens.spotify_secret,
+        redirect_uri="https://google.com",
+        scope="playlist-modify-public"
+    )
+)
 
 translator = Translator()
+
+intents = discord.Intents.all()
+bot = commands.Bot(
+    command_prefix='>', case_insensitive=True,
+    intents=intents, help_command=None
+)
 
 
 msg_cargos_pronomes = 791808051983155200
@@ -48,13 +66,6 @@ def check_anti_log(message):
         return False
 
     return True
-
-
-intents = discord.Intents.all()
-bot = commands.Bot(
-    command_prefix='>', case_insensitive=True,
-    intents=intents, help_command=None
-)
 
 
 @bot.event
@@ -213,6 +224,7 @@ async def on_invite_create(invite: discord.Invite):
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
+    check_playlist(message)
     comando = utils.normalizar(message.content)
     ctx = message.channel
 
@@ -675,6 +687,60 @@ async def translate(ctx, *, frase):
             f'Isso já está em português, <@{ctx.author.id}>!' +
             '\nou eu to maluco...'
         )
+
+
+@bot.command()
+async def playlist(ctx):
+    await ctx.send(f'É pra já!\n{links.playlist}')
+
+
+def check_playlist(message):
+    if message.author.id != 234395307759108106:
+        return
+
+    if not message.embeds:
+        return
+
+    embed = message.embeds[0].to_dict()
+    descricao = embed.get('description')
+    titulo = embed.get('title')
+
+    if descricao.startswith('Queued'):
+        return
+
+    if not titulo.startswith('Now'):
+        return
+
+    nome = descricao[descricao.find('['):descricao.find(']')]
+    nome = nome[1:]
+
+    nome = utils.normalizar(nome)
+    to_replace = [
+        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+',
+        '=', '"', ',', '?', '.', ':', '~', '>', '<', '{', '}', ';'
+    ]
+
+    for item in to_replace:
+        nome = nome.replace(item, '')
+
+    nome = nome.strip()
+
+    pesquisa = sp.search(nome, type='track', limit=1).get(
+        'tracks').get('items')
+
+    if pesquisa == []:
+        return
+
+    musica = pesquisa[0].get('external_urls').get('spotify')
+
+    playlist = sp.playlist('0TWxX4f5AiAfE4FVFj8Vcq').get('tracks').get('items')
+
+    for track in playlist:
+        track_link = track.get('track').get('external_urls').get('spotify')
+        if musica == track_link:
+            return
+
+    sp.playlist_add_items('0TWxX4f5AiAfE4FVFj8Vcq', [musica])
 
 
 @bot.command(aliases=['clean', 'limpar', 'apagar'])

@@ -3,3 +3,4 @@ desbanido = 'https://tenor.com/view/desbanido-ednaldo-pereira-ednaldo-pereira-ba
 repositorio = 'https://github.com/Eduardo-Barreto/Marselo-Bot'
 readme = 'https://github.com/Eduardo-Barreto/Marselo-Bot/blob/master/README.md'
 rickrolling = 'https://youtu.be/dQw4w9WgXcQ'
+playlist = 'https://open.spotify.com/playlist/0TWxX4f5AiAfE4FVFj8Vcq?si=d79e763e368743f2'
