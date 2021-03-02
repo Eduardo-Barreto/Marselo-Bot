@@ -1042,6 +1042,9 @@ async def status(ctx, lang, *, status):
 @bot.command()
 async def atualizar(ctx):
     await ctx.message.delete()
+    os.system(
+        'cp /home/pi/Desktop/Marselo-Bot/.cache /home/pi/Desktop/'
+    )
     os.chdir('..')
     os.system('sudo rm -R Marselo-Bot')
     os.system(
