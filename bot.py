@@ -854,6 +854,23 @@ def check_playlist(message):
     sp.playlist_add_items('0TWxX4f5AiAfE4FVFj8Vcq', [musica])
 
 
+@bot.command()
+async def site(ctx, *, nome):
+
+    site = utils.normalizar(nome)
+    to_replace = [
+        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+',
+        '=', '"', ',', '?', '.', ':', '~', '>', '<', '{', '}', ';'
+    ]
+
+    for item in to_replace:
+        site = site.replace(item, '')
+
+    site = site.strip()
+
+    await ctx.send(f'https://www.{site}.com\nhttp://www.{site}.com')
+
+
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
