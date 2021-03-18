@@ -387,7 +387,7 @@ async def reminder(ctx, *, lembrar):
     )
     membro = ctx.author.id
 
-    if 'em' in lembrar:
+    if ' em ' in lembrar:
         base = lembrar.split(' em ')
     else:
         await ctx.send(
