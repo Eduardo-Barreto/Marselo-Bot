@@ -193,7 +193,7 @@ async def pegar_trabalhos(ctx):
     for item in sorted(eventos):
         embed.add_field(
             name=eventos.get(item)[0],
-            value=f'{eventos.get(item)[1]} **({item})**',
+            value=f'{eventos.get(item)[1]}\n**({item})**',
             inline=False
         )
 
