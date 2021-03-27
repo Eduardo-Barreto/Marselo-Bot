@@ -387,11 +387,11 @@ async def reminder(ctx, *, lembrar):
     )
     membro = ctx.author.id
 
-    if 'em' in lembrar:
+    if ' em ' in lembrar:
         base = lembrar.split(' em ')
     else:
         await ctx.send(
-            'Oops, você digitou algo inválido, lembre-se:' +
+            'Oops, você digitou algo inválido, lembre-se: ' +
             'a sintaxe do comando é `>lembrar {sobre} em {tempo}' +
             ' {unidade(segundos/minutos/horas)}`'
         )
