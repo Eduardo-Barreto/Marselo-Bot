@@ -1,3 +1,4 @@
+import pesquisa_google
 import discord
 from urllib.request import urlopen
 from urllib.error import HTTPError
@@ -6,7 +7,12 @@ import os
 from datetime import datetime
 import wikipedia as wiki
 
-import pesquisa_google
+from tokens import conexao_username, conexao_password, conexao_token
+from bot_links import conexao_digital
+from ics import Calendar
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 
 def normalizar(txt):
@@ -73,7 +79,7 @@ async def dicionario(ctx, palavra):
                 title=f'Não consegui encontrar "{palavra}" no dicio :(',
                 description='Mas pesquisei no google e encontrei isso:',
                 colour=discord.Colour(0x349cff),
-                url=url,
+                url=url
             )
             embed.set_footer(
                 text='Você pode clicar no texto em azul para abrir'
@@ -133,3 +139,62 @@ async def wikipedia(ctx, topico):
         embed.set_image(url='attachment://screenshot.jpg')
         topico = topico.replace('-', ' ')
         await ctx.send(file=imagem, embed=embed)
+
+
+async def pegar_trabalhos(ctx):
+
+    logged_session = requests.Session()
+
+    url = 'https://conexaodigital2em.sesisp.org.br/login/index.php'
+    data = {'username': conexao_username, 'password': conexao_password}
+
+    response_login = logged_session.post(url, data=data, verify=False)
+
+    if response_login.status_code == 200:
+        print('Login realizado com sucesso')
+
+    url = (
+        'https://conexaodigital2em.sesisp.org.br/calendar/' +
+        f'export_execute.php?userid=2012&authtoken={conexao_token}' +
+        'preset_what=courses&preset_time=weeknow'
+    )
+
+    response_calendar = logged_session.get(
+        url, verify=False, allow_redirects=True)
+
+    if response_calendar.status_code == 200:
+        print('Calendário acessado com sucesso')
+
+    c = Calendar(response_calendar.text)
+
+    eventos = {}
+
+    for event in c.events:
+        materia = str(event.categories)
+        materia = materia[2:materia.find(' -')]
+        tempo = str(event.begin.humanize())
+        tempo = tempo.replace('days', 'dias')
+        tempo = tempo.replace('ago', 'atrás')
+        # TODO: traduzir dias restantes
+        nome = event.name
+        nome = nome[:nome.find('está marcado(a)')]
+        eventos.update({tempo: [materia, nome]})
+
+    embed = discord.Embed(
+        title='Lições dessa semana!',
+        description='2º Ano do Ensino médio - SESI CE 402',
+        colour=discord.Colour(0x349cff),
+        url=conexao_digital
+    )
+    embed.set_footer(
+        text='Conexão Digital SESI-SP | Marselo'
+    )
+
+    for item in sorted(eventos):
+        embed.add_field(
+            name=eventos.get(item)[0],
+            value=f'{eventos.get(item)[1]} **({item})**',
+            inline=False
+        )
+
+    await ctx.send('Aqui está! :)', embed=embed)

@@ -871,6 +871,11 @@ async def site(ctx, *, nome):
     await ctx.send(f'https://www.{site}.com\nhttp://www.{site}.com')
 
 
+@bot.command(aliases=['tarefas', 'trabalhos', 'temas'])
+async def licoes(ctx):
+    await utils.pegar_trabalhos(ctx)
+
+
 @bot.command(aliases=['clean', 'limpar', 'apagar'])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, quantidade=1):
