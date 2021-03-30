@@ -1,6 +1,5 @@
 import imgkit
 import pyshorteners
-import os
 
 
 def get_link(search):
@@ -15,14 +14,6 @@ def get_link(search):
 
 
 def get_screenshot(url):
-    if os.name == 'nt':
-        config = imgkit.config(
-            wkhtmltoimage='C:/Program Files/wkhtmltopdf/bin/wkhtmltoimage.exe'
-        )
-    else:
-        config = imgkit.config(
-            wkhtmltoimage='/usr/bin/wkhtmltoimage'
-        )
 
     options = {
         'format': 'jpg',
@@ -34,4 +25,4 @@ def get_screenshot(url):
         'quiet': '',
     }
 
-    imgkit.from_url(url, 'screenshot.jpg', config=config, options=options)
+    imgkit.from_url(url, 'screenshot.jpg', options=options)
