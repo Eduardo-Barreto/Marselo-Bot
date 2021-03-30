@@ -133,6 +133,6 @@ dmypy.json
 .vscode
 
 # tokens
-tokens.py
+bkp_tokens.py
 screenshot.jpg
 init.bat
