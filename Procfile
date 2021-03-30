@@ -1,0 +1,1 @@
+marselo-bot: python "bot.py"
