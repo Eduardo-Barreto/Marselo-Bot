@@ -9,24 +9,11 @@ from discord.ext import commands
 from discord.utils import get
 import time
 import asyncio
-import os
 from urllib.request import urlopen
 from urllib.error import HTTPError
 from datetime import datetime
 from random import randint, seed, choice
 from googletrans import Translator
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-
-
-sp = spotipy.Spotify(
-    auth_manager=SpotifyOAuth(
-        client_id=tokens.spotify_id,
-        client_secret=tokens.spotify_secret,
-        redirect_uri="https://google.com",
-        scope="playlist-modify-public"
-    )
-)
 
 translator = Translator()
 
@@ -224,7 +211,6 @@ async def on_invite_create(invite: discord.Invite):
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
-    check_playlist(message)
     comando = utils.normalizar(message.content)
     ctx = message.channel
 
@@ -805,55 +791,6 @@ async def playlist(ctx):
     await ctx.send(f'É pra já!\n{links.playlist}')
 
 
-def check_playlist(message):
-    if message.author.id != 234395307759108106:
-        return
-
-    if not message.embeds:
-        return
-
-    embed = message.embeds[0].to_dict()
-    descricao = embed.get('description')
-    titulo = embed.get('title')
-
-    if descricao.startswith('Queued'):
-        return
-
-    if not titulo.startswith('Now'):
-        return
-
-    nome = descricao[descricao.find('['):descricao.find(']')]
-    nome = nome[1:]
-
-    nome = utils.normalizar(nome)
-    to_replace = [
-        '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+',
-        '=', '"', ',', '?', '.', ':', '~', '>', '<', '{', '}', ';'
-    ]
-
-    for item in to_replace:
-        nome = nome.replace(item, '')
-
-    nome = nome.strip()
-
-    pesquisa = sp.search(nome, type='track', limit=1).get(
-        'tracks').get('items')
-
-    if pesquisa == []:
-        return
-
-    musica = pesquisa[0].get('external_urls').get('spotify')
-
-    playlist = sp.playlist('0TWxX4f5AiAfE4FVFj8Vcq').get('tracks').get('items')
-
-    for track in playlist:
-        track_link = track.get('track').get('external_urls').get('spotify')
-        if musica == track_link:
-            return
-
-    sp.playlist_add_items('0TWxX4f5AiAfE4FVFj8Vcq', [musica])
-
-
 @bot.command()
 async def site(ctx, *, nome):
 
@@ -1041,33 +978,6 @@ async def status(ctx, lang, *, status):
     utils.clear()
     print(f'Status alterado para "{status}"')
     await ctx.message.delete()
-
-
-@commands.is_owner()
-@bot.command()
-async def atualizar(ctx):
-    await ctx.message.delete()
-    os.system(
-        'cp /home/pi/Desktop/Marselo-Bot/.cache /home/pi/Desktop/'
-    )
-    os.chdir('..')
-    os.system('sudo rm -R Marselo-Bot')
-    os.system(
-        'git clone https://github.com/Eduardo-Barreto/Marselo-Bot.git'
-    )
-    os.system(
-        'cp /home/pi/Desktop/tokens.py /home/pi/Desktop/Marselo-Bot'
-    )
-    os.system(
-        'cp /home/pi/Desktop/.cache /home/pi/Desktop/Marselo-Bot'
-    )
-    os.chdir('Marselo-Bot')
-    os.system('python3 -m venv marselo')
-    os.system('source ./marselo/bin/activate')
-    os.system('pip3 install -r requirements.txt')
-    os.system('clear')
-    os.system('python3 bot.py')
-    quit()
 
 
 @commands.is_owner()
