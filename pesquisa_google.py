@@ -21,7 +21,7 @@ def get_screenshot(url):
         )
     else:
         config = imgkit.config(
-            wkhtmltoimage='/vendor/wkhtmltox/lib/libwkhtmltox.so'
+            wkhtmltoimage='/bin/wkhtmltoimage'
         )
 
     options = {
