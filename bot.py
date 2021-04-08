@@ -396,7 +396,7 @@ async def reminder(ctx, *, lembrar):
         return
 
     unidade = base_tempo[1]
-    await ctx.send(f'Ok <@{membro}>, vou te lembrar sobre {lembrar}!')
+    await ctx.send(f'Ok <@{membro}>, vou te lembrar sobre isso!')
 
     if unidade.startswith('segundo'):
         await asyncio.sleep(tempo)
@@ -414,11 +414,11 @@ async def reminder(ctx, *, lembrar):
         )
         return
 
-    await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre {sobre}!')
+    await ctx.send(f'Oi <@{membro}>, vim te lembrar sobre `{sobre}`!')
     user = await bot.fetch_user(membro)
     await DMChannel.send(
         user,
-        f'Oi <@{membro}>, vim te lembrar sobre {sobre}!'
+        f'Oi <@{membro}>, vim te lembrar sobre `{sobre}`!'
     )
 
 
