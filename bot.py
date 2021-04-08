@@ -266,6 +266,7 @@ async def on_message(message):
         )
 
 
+@commands.is_owner()
 @bot.command(aliases=['ajuda'])
 async def help(ctx, *, argumento=''):
     print(
