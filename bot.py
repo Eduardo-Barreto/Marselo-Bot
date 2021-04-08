@@ -274,7 +274,7 @@ async def help(ctx, *, argumento=''):
     )
     if len(argumento) > 0:
         url = f'{links.readme}#{argumento}'
-        await ctx.send(f'Ajuda para o comando {argumento}: {url}')
+        await ctx.send(f'Ajuda para o comando: {url}')
     else:
         await ctx.send(
             'Você pode encontrar todos os comandos em:' +
@@ -791,6 +791,7 @@ async def playlist(ctx):
     await ctx.send(f'É pra já!\n{links.playlist}')
 
 
+@commands.is_owner()
 @bot.command()
 async def site(ctx, *, nome):
 
