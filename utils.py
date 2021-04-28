@@ -173,6 +173,8 @@ async def pegar_trabalhos(ctx):
         materia = str(event.categories)
         materia = materia[2:materia.find(' -')]
         tempo = str(event.begin.humanize())
+        tempo = tempo.replace('a day', 'um dia')
+        tempo = tempo.replace('in', 'em')
         tempo = tempo.replace('days', 'dias')
         tempo = tempo.replace('ago', 'atrás')
         # TODO: traduzir dias restantes
