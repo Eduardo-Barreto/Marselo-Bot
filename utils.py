@@ -156,7 +156,7 @@ async def pegar_trabalhos(ctx):
     url = (
         'https://conexaodigital2em.sesisp.org.br/calendar/' +
         f'export_execute.php?userid=2012&authtoken={conexao_token}' +
-        'preset_what=courses&preset_time=weeknow'
+        '&preset_what=all&preset_time=weeknow'
     )
 
     response_calendar = logged_session.get(
