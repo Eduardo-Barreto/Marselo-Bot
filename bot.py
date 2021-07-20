@@ -489,50 +489,51 @@ async def sort(ctx, *, lista):
 
 @bot.command(aliases=['jp'])
 async def jokenpo(ctx, elemento):
-    elementos = ['pedra', 'papel', 'tesoura']
+    pedra = 'pedra'
+    papel = 'papel'
+    tesoura = 'tesoura'
 
-    counter = 0
-    for item in elementos:
-        if item in elemento:
-            counter += 1
+    jogos = {
+        pedra: {
+            papel: 'Você perdeu',
+            tesoura: 'Você ganhou',
+            pedra: 'Nós empatamos'
+        },
+        papel: {
+            tesoura: 'Você perdeu',
+            pedra: 'Você ganhou',
+            papel: 'Nós empatamos'
+        },
+        tesoura: {
+            pedra: 'Você perdeu',
+            papel: 'Você ganhou',
+            tesoura: 'Nós empatamos'
+        }
+    }
 
-    if counter != 1:
-        await ctx.send('por favor use um elemento valido :pensive:')
-        return
+    elemento = elemento.strip().lower()
 
-    seed()
-    minha_escolha = choice(elementos)
+    if elemento in ['pedra', 'rock', '🪨']:
+        elemento = pedra
 
-    if elemento.startswith(minha_escolha):
-        resultado = 'Empate!'
+    elif elemento in ['papel', 'paper']:
+        elemento = papel
 
-    elif minha_escolha == 'papel' and elemento.startswith('pedra'):
-        resultado = 'Ganhei!'
-
-    elif minha_escolha == 'pedra' and elemento.startswith('tesoura'):
-        resultado = 'Ganhei!'
-
-    elif minha_escolha == 'tesoura' and elemento.startswith('papel'):
-        resultado = 'Ganhei!'
-
-    elif(
-        not elemento.startswith('pedra') and
-        not elemento.startswith('papel') and
-        not elemento.startswith('tesoura')
-    ):
-        await ctx.send(
-            'ah :pensive: o elemento deve estar depois do comando' +
-            ', tipo `>jokenpo pedra`'
-        )
-        return
+    elif elemento in ['tesoura', 'scissors', '✂️']:
+        elemento = tesoura
 
     else:
-        resultado = 'Perdi!'
+        await ctx.reply('perai amigao, jogada inválida')
+        return
+
+    random.seed()
+    escolha_computador = random.choice([pedra, papel, tesoura])
+    resultado = jogos[elemento][escolha_computador]
 
     embed = discord.Embed(
-        title=f'{resultado}',
+        title=resultado,
         colour=discord.Colour(0x349cff),
-        description=f'Eu escolhi `{minha_escolha}`'
+        description=f'Eu escolhi `{escolha_computador}`'
     )
     embed.set_thumbnail(
         url='https://blogdoiphone.com/wp-content/' +
@@ -541,7 +542,7 @@ async def jokenpo(ctx, elemento):
     embed.set_footer(
         text=f'E você escolheu {elemento}'
     )
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 
 @bot.command()
