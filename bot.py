@@ -525,8 +525,8 @@ async def jokenpo(ctx, elemento):
         await ctx.reply('perai amigao, jogada inválida')
         return
 
-    random.seed()
-    escolha_computador = random.choice([pedra, papel, tesoura])
+    seed()
+    escolha_computador = choice([pedra, papel, tesoura])
     resultado = jogos[elemento][escolha_computador]
 
     embed = discord.Embed(
