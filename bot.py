@@ -264,6 +264,9 @@ async def on_message(message):
             file=imagem,
             embed=embed
         )
+        
+    if 'juliete' in comando_processado or 'juliette' in comando_processado:
+        await ctx.send('meu povo o cuscuz ta pronto')
 
 
 @commands.is_owner()
