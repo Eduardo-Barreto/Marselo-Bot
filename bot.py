@@ -182,6 +182,7 @@ async def on_message_delete(message):
         and check_anti_log(message)
         and message.author.id != 234395307759108106
         and message.author.id != 235088799074484224
+        and message.author.id != 547905866255433758
     ):
         member = message.author
         canal = message.channel.id
